@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        (() => {
+          const pref = localStorage.getItem('theme');   // 'light' | 'night' | null
+          if (pref === 'light') document.documentElement.classList.add('light');
+        })();
+        </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedLink — Doctors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <script type="module" src="theme.js"></script>
+  <script type="module" src="doctors.js"></script>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <header class="logo">MedLink</header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#services">Services</a>
+        <a href="doctors.html"  class="active">Doctors</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#reviews">Reviews</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+    <footer>
+      <button id="themeBtn">🌙</button>
+    </footer>
+  </aside>
+
+  <main class="content">
+    <section class="page-hero">
+      <h1>Find the Right Specialist</h1>
+      <input id="search" type="search" placeholder="Search by name or specialty…" />
+    </section>
+
+    <section id="doctorList" class="doctors grid"></section>
+  </main>
+</body>
+</html>

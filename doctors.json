@@ -1,0 +1,25 @@
+
+[
+    {
+      "id":"emily-carter",
+      "name":"Dr Emily Carter",
+      "specialty":"Cardiology",
+      "country":"Germany",
+      "photo":"images/doctors/emily.jpg"
+    },
+    {
+      "id":"li-wei",
+      "name":"Dr Li Wei",
+      "specialty":"Dermatology",
+      "country":"Singapore",
+      "photo":"images/doctors/wei.jpg"
+    },
+    {
+      "id":"carlos-soto",
+      "name":"Dr Carlos Soto",
+      "specialty":"Orthopedics",
+      "country":"Spain",
+      "photo":"images/doctors/soto.jpg"
+    }
+  ]
+  
