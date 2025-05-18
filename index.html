@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <script>
-  (()=>{const t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light')})();
+    (() => {
+      const t = localStorage.getItem('theme');
+      if (t === 'light') document.documentElement.classList.add('light');
+    })();
   </script>
 
   <meta charset="UTF-8" />
@@ -17,25 +20,30 @@
 </head>
 
 <body>
-  <!-- ─────────────────────────  SIDEBAR  ───────────────────────── -->
-  <aside class="sidebar" id="sidebar">
-    <header class="logo">MedLink</header>
+  <!-- BURGER -->
+<button id="toggleSidebar" class="burger" aria-label="Toggle menu">
+  <span></span><span></span><span></span>
+</button>
 
-    <nav>
-      <a href="#home" class="active">Home</a>
-      <a href="#services">Services</a>
-      <a href="doctors.html">Doctors</a>
-      <a href="#how">How it works</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#contact">Contact</a>
-    </nav>
+<!-- ───────────── SIDEBAR ───────────── -->
+<aside id="sidebar" class="sidebar collapsed">
+  <header>
+    <span class="logo">MedLink</span>
+    <button id="themeBtn" aria-label="Toggle theme">🌙</button>
+  </header>
 
-    <footer>
-      <button id="themeBtn">🌙</button>
-    </footer>
-  </aside>
+  <nav>
+    <a href="#home"    class="active">Home</a>
+    <a href="#services">Services</a>
+    <a href="doctors.html">Doctors</a>
+    <a href="#how">How it works</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</aside>
 
-  <!-- ─────────────────────────  MAIN  ───────────────────────── -->
+
+  <!-- ───────────── MAIN ───────────── -->
   <main class="content">
 
     <!-- HERO -->
@@ -45,15 +53,14 @@
       <a href="doctors.html" class="cta">Find Your Doctor</a>
     </section>
 
-<section id="doctors" class="doctors">
-    <header class="section-head">
-      <h2>Top Doctors</h2>
-      <p>Hand‑picked specialists with outstanding credentials</p>
-    </header>
-  
-    <div id="doctorCards" ></div>
-  </section>
-  
+    <!-- DOCTORS -->
+    <section id="doctors" class="doctors">
+      <header class="section-head">
+        <h2>Top Doctors</h2>
+        <p>Hand‑picked specialists with outstanding credentials</p>
+      </header>
+      <div id="doctorCards"></div>
+    </section>
 
     <!-- SERVICES -->
     <section id="services" class="grid">
