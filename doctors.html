@@ -1,45 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-        (() => {
-          const pref = localStorage.getItem('theme');   // 'light' | 'night' | null
-          if (pref === 'light') document.documentElement.classList.add('light');
-        })();
-        </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedLink — Doctors</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <script>(()=>{const t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light');})();</script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MedLink — Doctors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 
   <script type="module" src="theme.js"></script>
+  <script defer src="script.js"></script>
   <script type="module" src="doctors.js"></script>
 </head>
 
 <body>
-  <aside class="sidebar" id="sidebar">
-    <header class="logo">MedLink</header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="index.html#services">Services</a>
-        <a href="doctors.html"  class="active">Doctors</a>
-        <a href="index.html#how">How it works</a>
-        <a href="index.html#reviews">Reviews</a>
-        <a href="index.html#contact">Contact</a>
-    </nav>
-    <footer>
-      <button id="themeBtn">🌙</button>
-    </footer>
-  </aside>
+ <!-- BURGER -->
+<button id="toggleSidebar" class="burger" aria-label="Toggle menu">
+  <span></span><span></span><span></span>
+</button>
 
+<!-- ───────────── SIDEBAR ───────────── -->
+<aside id="sidebar" class="sidebar collapsed">
+  <header>
+    <span class="logo">MedLink</span>
+    <button id="themeBtn" aria-label="Toggle theme">🌙</button>
+  </header>
+
+  <nav>
+    <a href="index.html"   >Home</a>
+    <a href="#services">Services</a>
+    <a href="doctors.html"  class="active">Doctors</a>
+    <a href="#how">How it works</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</aside>
+
+
+  <!-- MAIN -->
   <main class="content">
     <section class="page-hero">
       <h1>Find the Right Specialist</h1>
-      <input id="search" type="search" placeholder="Search by name or specialty…" />
+      <input id="search" type="search" placeholder="Search by name or specialty…"/>
     </section>
 
     <section id="doctorList" class="doctors grid"></section>
+
+     <!-- FOOTER -->
+    <footer class="site-footer">
+      © 2025 MedLink. All rights reserved.
+    </footer>
   </main>
+
+  
 </body>
 </html>
