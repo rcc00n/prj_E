@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    // Preserve user’s theme preference (light mode) on page load
+    (() => {
+      const t = localStorage.getItem('theme');
+      if (t === 'light') document.documentElement.classList.add('light');
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedLink — Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="services.css" />
+  <script type="module" src="theme.js"></script>
+  <script defer src="script.js"></script>
+  <script type="module" src="services.js"></script>
+</head>
+<body>
+  <!-- BURGER BUTTON -->
+  <button id="toggleSidebar" class="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside id="sidebar" class="sidebar collapsed">
+    <header>
+      <span class="logo">MedLink</span>
+      <button id="themeBtn" aria-label="Toggle theme">🌙</button>
+    </header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="services.html" class="active">Services</a>
+      <a href="doctors.html">Doctors</a>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#reviews">Reviews</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <!-- HERO SECTION -->
+    <section class="hero services-hero">
+      <h1>Connecting Patients with World‑Class Doctors Worldwide</h1>
+      <p>Our platform connects patients to certified specialists around the globe, 
+         while enabling doctors to offer care beyond borders.</p>
+    </section>
+
+    <!-- STATS (KEY NUMBERS) -->
+    <section class="stats">
+      <div class="stat fade-in">
+        <span class="stat-number" data-target="35">0</span>+
+        <p>Countries Covered</p>
+      </div>
+      <div class="stat fade-in">
+        <span class="stat-number" data-target="120">0</span>+
+        <p>Doctors Onboarded</p>
+      </div>
+      <div class="stat fade-in">
+        <span class="stat-number" data-target="1000">0</span>+
+        <p>Patients Served</p>
+      </div>
+    </section>
+
+    <!-- SERVICES FOR PATIENTS -->
+    <section class="patients-section fade-in">
+      <header class="section-head">
+        <h2>For Patients</h2>
+        <p>Select a service to see details</p>
+      </header>
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-button active" data-tab="consult">Video Consultations</button>
+        <button class="tab-button" data-tab="opinion">Second Opinion</button>
+        <button class="tab-button" data-tab="travel">Medical Travel</button>
+      </div>
+      <!-- Tab Content Panels -->
+      <div class="tab-contents">
+        <!-- Video Consultations Panel -->
+        <div class="tab-content active" data-content="consult">
+          <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80" alt="Doctor video consultation">
+          <div>
+            <h3>Video Consultations</h3>
+            <p>Connect instantly with specialists via secure HD video calls. 
+               Get expert medical advice across 40+ specialties without leaving home.</p>
+            <p>Simply choose a doctor and appointment time to meet virtually through our platform. 
+               Enjoy convenience and peace of mind with 24/7 access to quality care.</p>
+          </div>
+        </div>
+        <!-- Second Opinion Panel -->
+<div class="tab-content" data-content="opinion">
+  <img src="images/second-opinion.png"
+       alt="Doctor reviewing scans for a second opinion">
+  <div>
+    <h3>Second Opinion</h3>
+    <p>Have your medical case reviewed by world-class experts. Upload your records securely and
+       receive an authoritative second opinion from top international clinics within days.</p>
+    <p>This service helps you double-check diagnoses or treatment plans, ensuring you make informed
+       healthcare decisions with confidence.</p>
+  </div>
+</div>
+
+        <!-- Medical Travel Panel -->
+        <div class="tab-content" data-content="travel">
+          <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=1200&q=80" alt="Travel for medical care">
+          <div>
+            <h3>Medical Travel</h3>
+            <p>Access treatment abroad with our full-service medical travel support. We coordinate every step – 
+               from scheduling procedures at accredited hospitals to arranging flights, visas, and accommodation.</p>
+            <p>Whether you need surgery, specialized therapy, or an executive check-up overseas, MedLink ensures a smooth, 
+               safe journey. Travel with confidence as our team handles logistics and post-care follow-up.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO FOR DOCTORS -->
+    <section class="doctors-section fade-in">
+      <header class="section-head">
+        <h2>For Doctors</h2>
+        <p>Grow your practice internationally with MedLink</p>
+      </header>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">Onboarding</button>
+          <div class="accordion-panel">
+            <p>Joining MedLink is simple: sign up, verify your credentials, and create your profile. 
+               Once approved, you can start accepting patient requests from around the world within days.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Earnings</button>
+          <div class="accordion-panel">
+            <p>Set your own consultation fees and earn directly through our secure platform. 
+               Patients pay online, and you receive payouts swiftly. Our transparent commission policy 
+               means no surprises – you retain the majority of your earnings.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Benefits</button>
+          <div class="accordion-panel">
+            <p>Enjoy flexibility and global reach. Fill gaps in your schedule with online consultations, 
+               expand your patient base internationally, and enhance your reputation through patient reviews. 
+               MedLink’s support team is on hand to assist, so you can focus on providing quality care.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      © 2025 MedLink. All rights reserved.
+    </footer>
+  </main>
+</body>
+</html>
