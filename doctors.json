@@ -1,25 +1,112 @@
-
 [
-    {
-      "id":"emily-carter",
-      "name":"Dr Emily Carter",
-      "specialty":"Cardiology",
-      "country":"Germany",
-      "photo":"images/doctors/emily.jpg"
-    },
-    {
-      "id":"li-wei",
-      "name":"Dr Li Wei",
-      "specialty":"Dermatology",
-      "country":"Singapore",
-      "photo":"images/doctors/wei.jpg"
-    },
-    {
-      "id":"carlos-soto",
-      "name":"Dr Carlos Soto",
-      "specialty":"Orthopedics",
-      "country":"Spain",
-      "photo":"images/doctors/soto.jpg"
-    }
-  ]
-  
+  {
+    "id": "emily-carter",
+    "name": "Dr Emily Carter",
+    "specialty": "Cardiology",
+    "country": "Germany",
+    "photo": "images/doctors/emily.jpg",
+    "bio": "Board-certified cardiologist with over 12 years of experience in heart failure and interventional procedures.",
+    "email": "emily.carter@medlink.de",
+    "phone": "+49 30 1234 5678",
+    "hours": "Mon–Fri 09:00–17:00"
+  },
+  {
+    "id": "li-wei",
+    "name": "Dr Li Wei",
+    "specialty": "Dermatology",
+    "country": "Singapore",
+    "photo": "images/doctors/wei.jpg",
+    "bio": "Specializes in skin disorders and cosmetic dermatology with advanced training in laser treatments.",
+    "email": "li.wei@medlink.sg",
+    "phone": "+65 6123 4567",
+    "hours": "Tue–Sat 10:00–18:00"
+  },
+  {
+    "id": "carlos-soto",
+    "name": "Dr Carlos Soto",
+    "specialty": "Orthopedics",
+    "country": "Spain",
+    "photo": "images/doctors/soto.jpg",
+    "bio": "Orthopedic surgeon focused on joint replacement, sports injuries, and rehabilitation protocols.",
+    "email": "carlos.soto@medlink.es",
+    "phone": "+34 912 345 678",
+    "hours": "Mon–Thu 08:30–16:30"
+  },
+  {
+    "id": "amina-khan",
+    "name": "Dr Amina Khan",
+    "specialty": "Endocrinology",
+    "country": "United Arab Emirates",
+    "photo": "images/doctors/khan.jpg",
+    "bio": "Expert in diabetes and thyroid disorders with over a decade of international experience.",
+    "email": "amina.khan@medlink.ae",
+    "phone": "+971 4 334 1122",
+    "hours": "Sun–Thu 09:00–17:00"
+  },
+  {
+    "id": "marcus-lee",
+    "name": "Dr Marcus Lee",
+    "specialty": "Neurology",
+    "country": "South Korea",
+    "photo": "images/doctors/lee.jpg",
+    "bio": "Specializes in epilepsy and neurodegenerative diseases with published work in global journals.",
+    "email": "marcus.lee@medlink.kr",
+    "phone": "+82 2 789 4433",
+    "hours": "Mon–Fri 10:00–18:00"
+  },
+  {
+    "id": "isabelle-moreau",
+    "name": "Dr Isabelle Moreau",
+    "specialty": "Pediatrics",
+    "country": "France",
+    "photo": "images/doctors/moreau.jpg",
+    "bio": "Trusted pediatrician with experience in developmental assessments and family education.",
+    "email": "isabelle.moreau@medlink.fr",
+    "phone": "+33 1 2345 6789",
+    "hours": "Mon–Fri 08:00–15:00"
+  },
+  {
+    "id": "daniel-smith",
+    "name": "Dr Daniel Smith",
+    "specialty": "Psychiatry",
+    "country": "Canada",
+    "photo": "images/doctors/smith.jpg",
+    "bio": "Psychiatrist focusing on adolescent mental health, trauma recovery, and telepsychiatry.",
+    "email": "daniel.smith@medlink.ca",
+    "phone": "+1 416 555 0199",
+    "hours": "Mon–Fri 12:00–20:00"
+  },
+  {
+    "id": "sofia-rossi",
+    "name": "Dr Sofia Rossi",
+    "specialty": "Gynecology",
+    "country": "Italy",
+    "photo": "images/doctors/rossi.jpg",
+    "bio": "Dedicated to women's health with a focus on fertility treatments and minimally invasive surgery.",
+    "email": "sofia.rossi@medlink.it",
+    "phone": "+39 06 1234 5678",
+    "hours": "Tue–Sat 09:00–17:00"
+  },
+  {
+    "id": "tariq-nasser",
+    "name": "Dr Tariq Nasser",
+    "specialty": "Pulmonology",
+    "country": "Jordan",
+    "photo": "images/doctors/nasser.jpg",
+    "bio": "Pulmonologist experienced in managing asthma, COPD, and post-COVID respiratory care.",
+    "email": "tariq.nasser@medlink.jo",
+    "phone": "+962 6 556 1122",
+    "hours": "Sun–Thu 08:00–16:00"
+  },
+  {
+    "id": "nora-kuznetsova",
+    "name": "Dr Nora",
+    "specialty": "Cardiology",
+    "country": "Ukraine",
+    "photo": "images/doctors/kuznetsova.jpg",
+    "bio": "Specialist in autoimmune diseases and chronic joint pain with experience in international teleconsultations.",
+    "email": "nora.kuznetsova@medlink.ua",
+    "phone": "+380 44 789 3210",
+    "hours": "Mon–Fri 09:30–17:30"
+  }
+]

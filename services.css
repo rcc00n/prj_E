@@ -96,7 +96,7 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-.accordion-header {
+/* .accordion-header {
   background: var(--card);
   color: var(--text);
   font-weight: 600;
@@ -107,37 +107,37 @@
   border-radius: var(--radius);
   cursor: pointer;
   position: relative;
-}
+} */
 .accordion-header:hover {
   background: var(--accent);
   color: #fff;
 }
-.accordion-header::after {
+/* .accordion-header::after {
   content: "＋";
   position: absolute;
   right: 1rem;
   font-size: 1.2rem;
   font-weight: 600;
-}
-.accordion-item.open .accordion-header::after {
+} */
+/* .accordion-item.open .accordion-header::after {
   content: "−";
-}
+} */
 .accordion-item.open .accordion-header {
   /* Square off bottom corners when open */
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-.accordion-panel {
+/* .accordion-panel {
   display: none;
   background: var(--card);
   padding: 0 1rem 1rem;
   /* Round corners at bottom of open panel */
-  border-bottom-left-radius: var(--radius);
+  /* border-bottom-left-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
 }
 .accordion-item.open .accordion-panel {
   display: block;
-}
+/* } */ 
 .accordion-panel p {
   margin-top: 0.75rem;
 }
@@ -156,3 +156,74 @@
 .stats .stat:nth-child(1) { transition-delay: 0s; }
 .stats .stat:nth-child(2) { transition-delay: 0.2s; }
 .stats .stat:nth-child(3) { transition-delay: 0.4s; }
+
+
+/* ===== Doctors accordion polish  ===== */
+.doctors-section .accordion-item{
+  margin-bottom:2rem;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 6px 14px #0005;
+  background:linear-gradient(145deg,#0f2341 0%,#112d4e 100%);
+}
+
+.doctors-section .accordion-header{
+  width:100%;
+  padding:1.2rem 1.6rem;
+  background:transparent;
+  border:none;
+  font:600 1rem/1 'Inter',sans-serif;
+  color:var(--text);
+  text-align:left;
+  cursor:pointer;
+  position:relative;
+  transition:background .25s ease;
+}
+.doctors-section .accordion-header:hover{background:#173d6a;}
+
+/* arrow icon */
+.doctors-section .accordion-header::after{
+  content:'';
+  position:absolute;
+  top:50%; right:1.6rem;
+  width:.55rem; height:.55rem;
+  border:2px solid var(--text);
+  border-left:0; border-top:0;
+  transform:translateY(-50%) rotate(45deg);
+  transition:transform .25s ease;
+}
+.doctors-section .accordion-item.open .accordion-header::after{
+  transform:translateY(-50%) rotate(-135deg);
+}
+
+/* sliding panel */
+.doctors-section .accordion-panel{
+  max-height:0;
+  overflow:hidden;
+  padding:0 1.8rem;
+  color:#e2eafccc;
+  line-height:1.55;
+  transition:max-height .4s ease, padding .4s ease;
+}
+.doctors-section .accordion-item.open .accordion-panel{
+  padding:1rem 1.8rem 1.6rem;
+  max-height:1200px;          /* plenty for long copy */
+}
+
+/* typography inside panel */
+.doctors-section .accordion-panel p{margin:0 0 1rem;text-align:justify;}
+.doctors-section .accordion-panel ul{padding-left:1.2rem;margin:0 0 .8rem;}
+.doctors-section .accordion-panel li{margin:.35rem 0;}
+
+/* light theme adjustments */
+html.light .doctors-section .accordion-item{
+  background:#fff;
+  box-shadow:0 6px 14px #0002;
+}
+html.light .doctors-section .accordion-header:hover{background:#dfe6ff;}
+html.light .doctors-section .accordion-header::after{border-color:#14213d;}
+
+/* ↓ tighter vertical spacing between accordion cards */
+.doctors-section .accordion-item{
+  margin-bottom: .8rem;   /* was 2rem */
+}

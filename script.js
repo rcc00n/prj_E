@@ -1,11 +1,15 @@
+/* script.js */
+
 fetch('doctors.json')
-  .then(r=>r.json())
+  .then(r => r.json())
   .then(renderDoctors)
   .catch(console.error);
 
 function renderDoctors(list){
-  const box=document.getElementById('doctorCards'); 
-  box.innerHTML=list.map(makeCard).join('');
+  const box = document.getElementById('doctorCards');
+  box.innerHTML = list                       // весь массив
+                   .slice(0, 4)              // ← берём первые 4-е
+                   .map(makeCard).join('');
 }
 
 function makeCard(d){
@@ -17,7 +21,7 @@ function makeCard(d){
     </article>`;
 }
 
-/*  SIDEBAR TOGGLE  */
+/* SIDEBAR TOGGLE (без изменений) */
 const burger  = document.getElementById('toggleSidebar');
 const sidebar = document.getElementById('sidebar');
 const body    = document.body;
@@ -28,9 +32,5 @@ function setCollapsed(state){
   body   .classList.toggle('sidebar-collapsed', state);
   localStorage.setItem('sidebarClosed', state ? '1' : '0');
 }
-
-/* клик по бургеру */
 burger.addEventListener('click', () => setCollapsed(!sidebar.classList.contains('collapsed')));
-
-/* восстановление состояния */
 setCollapsed(localStorage.getItem('sidebarClosed') === '1');

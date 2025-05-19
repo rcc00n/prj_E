@@ -64,3 +64,27 @@ if (statsSection) {
   }, { threshold: 0.2 });
   statsObserver.observe(statsSection);
 }
+
+
+document.querySelectorAll('.accordion-header').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    btn.parentElement.classList.toggle('open');
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  // grab every header inside this page’s accordion
+  const headers = document.querySelectorAll('.doctors-section .accordion-header');
+
+  headers.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // close any other open item (optional – remove if you want multi-open)
+      /* document.querySelectorAll('.doctors-section .accordion-item.open')
+              .forEach(item => item !== btn.parentElement && item.classList.remove('open')); */
+
+      // toggle the clicked one
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+});
