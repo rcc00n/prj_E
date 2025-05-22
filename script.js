@@ -90,7 +90,7 @@ document.querySelectorAll('.lang-btn').forEach(btn=>{
     }else if(lang==='en' && ruRe.test(path)){
       target = path.replace(ruRe, '.html');
     }
-    location.href = target;
+    // location.href = target;
   });
 });
 
@@ -99,3 +99,45 @@ const pref = localStorage.getItem('lang') || 'en';
 document.querySelectorAll('.lang-btn').forEach(b=>{
   b.classList.toggle('active', b.dataset.lang===pref);
 });
+
+/* ───────── TOP-DOCTORS ON HOME PAGE ───────── */
+const cardsBox = document.getElementById('doctorCards');
+if (cardsBox){                 // код запускается только на index.html
+  let lang = localStorage.getItem('lang') || 'en';
+  let topDoctors = [];
+
+  async function loadTop(lng){
+    try{
+      const res = await fetch(`./data/doctors-${lng}.json`, {cache:'no-store'});
+      if(!res.ok) throw new Error(res.status);
+      const all = await res.json();
+      // возьмём первые 6 (или меньше, если данных меньше)
+      topDoctors = all.slice(0,6);
+    }catch(e){
+      console.error('Top-docs load error:', e);
+      topDoctors = [];
+    }
+    renderTop(topDoctors);
+  }
+
+  function renderTop(arr){
+    cardsBox.innerHTML = arr.length
+      ? arr.map(d=>`
+          <article class="card">
+            <img src="${d.photo}" alt="${d.name}">
+            <h3>${d.name}</h3>
+            <span>${d.specialty} · ${d.country}</span>
+          </article>
+        `).join('')
+      : '<p style="grid-column:1/-1;color:#fff7">—</p>';
+  }
+
+  // первая отрисовка
+  loadTop(lang);
+
+  // при смене языка
+  document.addEventListener('langChanged', e=>{
+    lang = e.detail;
+    loadTop(lang);
+  });
+}

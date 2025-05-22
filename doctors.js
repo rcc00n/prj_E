@@ -1,34 +1,33 @@
-const listBox  = document.getElementById('doctorList');
-const search   = document.getElementById('search');
+// ──────────────────────────────
+// doctors.js
+// ──────────────────────────────
+const listBox   = document.getElementById('doctorList');
+const searchInp = document.getElementById('search');
 
-let doctors = [];
-loadDoctors();
+// текущий язык интерфейса
+let lang     = localStorage.getItem('lang') || 'en';
+let doctors  = [];        // рабочий массив
 
-async function loadDoctors(){
+/* ===============================
+   ЗАГРУЗКА ДОКТОРОВ ПО ЯЗЫКУ
+   =============================== */
+async function loadDoctors(lng = 'en'){
   try{
-    const resp = await fetch('./doctors.json',{cache:'no-store'});
+    // обращаемся к ./data/doctors-en.json или doctors-ru.json
+    const resp = await fetch(`./data/doctors-${lng}.json`, {cache:'no-store'});
     if(!resp.ok) throw new Error(resp.status);
     doctors = await resp.json();
-  }catch{
+  }catch(err){
+    console.error('Cannot load doctors:', err);
+    // fallback на встроенный demoData
     doctors = demoData;
   }
   render(doctors);
 }
 
-search.addEventListener('input', e=>{
-  const q = e.target.value.trim().toLowerCase();
-  render(doctors.filter(d=>
-    d.name.toLowerCase().includes(q)||
-    d.specialty.toLowerCase().includes(q)||
-    d.country.toLowerCase().includes(q)
-  ));
-});
-
-function render(arr){
-  listBox.innerHTML = arr.length
-    ? arr.map(card).join('')
-    : '<p style="grid-column:1/-1;color:#fff7">No matches</p>';
-}
+/* ===============================
+   ОТРИСОВКА КАРТОЧЕК
+   =============================== */
 function card(d){
   return `<article class="card" id="${d.id}">
             <img src="${d.photo}" alt="${d.name}">
@@ -37,111 +36,130 @@ function card(d){
           </article>`;
 }
 
-const demoData=[/* … */];
-
-// Get modal elements
-const modal       = document.getElementById('doctorModal');
-const modalContent= modal.querySelector('.modal-content');
-const profileView = modal.querySelector('.profile-view');
-const formView    = modal.querySelector('.form-view');
-const closeBtn    = modal.querySelector('.modal-close');
-const bookBtn     = modal.querySelector('.book-btn');
-const form        = document.getElementById('appointmentForm');
-
-// Utility: find doctor by ID in our data array
-function getDoctorById(id) {
-  return doctors.find(d => d.id === id);
+function render(arr){
+  listBox.innerHTML = arr.length
+    ? arr.map(card).join('')
+    : `<p style="grid-column:1/-1;color:#fff7">No matches</p>`;
 }
 
-// Open modal and display profile info for the given doctor
-function openModal(doctorId) {
-  const doc = getDoctorById(doctorId);
-  if (!doc) return;
-  // Populate modal content with doctor's data
-  modal.querySelector('#modalPhoto').src = doc.photo;
-  modal.querySelector('#modalPhoto').alt = doc.name;
+/* ===============================
+   ПОИСК по имени / специальности / стране
+   =============================== */
+searchInp?.addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  render(
+    doctors.filter(d=>
+      d.name.toLowerCase().includes(q)||
+      d.specialty.toLowerCase().includes(q)||
+      d.country.toLowerCase().includes(q)
+    )
+  );
+});
+
+/* ===============================
+   ПЕРВАЯ ЗАГРУЗКА
+   =============================== */
+loadDoctors(lang);
+
+/* ===============================
+   ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА
+   =============================== */
+document.addEventListener('langChanged', e=>{
+  lang = e.detail;
+  loadDoctors(lang);          // перезапрашиваем JSON и перерисовываем
+});
+
+/* ==========================================================
+   МОДАЛЬНОЕ ОКНО (как в вашем прежнем рабочем коде, не трогаем)
+   ========================================================== */
+const modal        = document.getElementById('doctorModal');
+const modalContent = modal?.querySelector('.modal-content');
+const profileView  = modal?.querySelector('.profile-view');
+const formView     = modal?.querySelector('.form-view');
+const closeBtn     = modal?.querySelector('.modal-close');
+const bookBtn      = modal?.querySelector('.book-btn');
+const form         = document.getElementById('appointmentForm');
+
+// --- утилита для поиска врача по id ---
+function getDoctorById(id){ return doctors.find(d=>d.id===id); }
+
+// --- открытие карточки ---
+function openModal(id){
+  const doc = getDoctorById(id);
+  if(!doc) return;
+  modal.querySelector('#modalPhoto').src       = doc.photo;
+  modal.querySelector('#modalPhoto').alt       = doc.name;
   modal.querySelector('#doctorModalTitle').textContent = doc.name;
-  modal.querySelector('#modalSpecialty').textContent = `${doc.specialty} \u00B7 ${doc.country}`;
-  modal.querySelector('#modalBio').textContent = doc.bio || '';
-  modal.querySelector('#modalContact').innerHTML = 
-    `<strong>Email:</strong> <a href="mailto:${doc.email}">${doc.email}</a><br/>
-     <strong>Phone:</strong> <a href="tel:${doc.phone}">${doc.phone}</a>`;
-  modal.querySelector('#modalHours').innerHTML = 
-    `<strong>Working Hours:</strong> ${doc.hours}`;
-  
-  // Show the profile view, hide the form view
+  modal.querySelector('#modalSpecialty').textContent   = `${doc.specialty} · ${doc.country}`;
+  modal.querySelector('#modalBio').textContent         = doc.bio || '';
+  modal.querySelector('#modalContact').innerHTML =
+      `<strong>Email:</strong> <a href="mailto:${doc.email}">${doc.email}</a><br/>
+       <strong>Phone:</strong> <a href="tel:${doc.phone}">${doc.phone}</a>`;
+  modal.querySelector('#modalHours').innerHTML =
+      `<strong>Working Hours:</strong> ${doc.hours}`;
+
   profileView.style.display = 'block';
   formView.style.display    = 'none';
-  // Ensure the dialog is labeled by the doctor's name
-  modalContent.setAttribute('aria-labelledby', 'doctorModalTitle');
-  
-  // Display the modal
+  modalContent.setAttribute('aria-labelledby','doctorModalTitle');
   modal.classList.add('show');
-  modal.setAttribute('aria-hidden', 'false');
-  
-  // Set initial focus to the close button (so user can tab into content easily)
+  modal.setAttribute('aria-hidden','false');
   closeBtn.focus();
-  // (Alternatively, focus the first interactive element or the heading for screen readers)
 }
 
-// Close modal function
-function closeModal() {
+// --- закрытие ---
+function closeModal(){
   modal.classList.remove('show');
-  modal.setAttribute('aria-hidden', 'true');
-  // Return focus to the last focused element (the card that was clicked)
-  if (lastFocusedCard) {
-    lastFocusedCard.focus();
-    lastFocusedCard = null;
-  }
+  modal.setAttribute('aria-hidden','true');
+  if(lastFocusedCard){ lastFocusedCard.focus(); lastFocusedCard=null; }
 }
 
-// Open form view when "Book Appointment" is clicked
-bookBtn.addEventListener('click', () => {
-  // Switch to the form section
+// --- переключение в форму брони ---
+bookBtn?.addEventListener('click',()=>{
   profileView.style.display = 'none';
   formView.style.display    = 'block';
-  // Update dialog label for screen readers
-  modalContent.setAttribute('aria-labelledby', 'appointmentTitle');
-  // Focus the first form field (Name) for convenience
-  document.getElementById('app-name').focus();
+  modalContent.setAttribute('aria-labelledby','appointmentTitle');
+  document.getElementById('app-name')?.focus();
 });
 
-// Close modal on overlay click or close button click
-closeBtn.addEventListener('click', closeModal);
-modal.querySelector('.modal-overlay').addEventListener('click', closeModal);
-
-// Close on Escape key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && modal.classList.contains('show')) {
-    closeModal();
-  }
+// --- события закрытия ---
+closeBtn?.addEventListener('click',closeModal);
+modal?.querySelector('.modal-overlay')?.addEventListener('click',closeModal);
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && modal?.classList.contains('show')) closeModal();
 });
 
-// Track last focused element (doctor card) to restore focus after closing
+/* ===============================
+   КЛИК/ENTER ПО КАРТОЧКАМ
+   =============================== */
 let lastFocusedCard = null;
-// Use event delegation to handle clicks on any doctor card
-const doctorList = document.getElementById('doctorList');
-doctorList.addEventListener('click', (e) => {
+listBox.addEventListener('click', e=>{
   const card = e.target.closest('.card');
-  if (card) {
-    // make cards focusable if not already
-    card.setAttribute('tabindex', '0');
+  if(card){
+    card.setAttribute('tabindex','0');
     lastFocusedCard = card;
     openModal(card.id);
   }
 });
-// Handle keyboard "Enter" on a focused card
-doctorList.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && document.activeElement.classList.contains('card')) {
-    const card = document.activeElement;
-    lastFocusedCard = card;
-    openModal(card.id);
+listBox.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && document.activeElement.classList.contains('card')){
+    lastFocusedCard = document.activeElement;
+    openModal(lastFocusedCard.id);
   }
 });
 
-// Optionally, handle form submission (prevent page reload, since no backend)
-form.addEventListener('submit', (e) => {
+/* ===============================
+   ОТПРАВКА ФОРМЫ (демо)
+   =============================== */
+form?.addEventListener('submit', e=>{
   e.preventDefault();
   alert('Appointment request sent! (demo only)');
   closeModal();
 });
+
+/* ===============================
+   FALLBACK demoData (если JSON не найден)
+   =============================== */
+const demoData = [
+  {id:'demo', name:'Demo Doctor', specialty:'Demo', country:'Nowhere',
+   photo:'https://via.placeholder.com/160x160', bio:'Demo profile.', email:'', phone:'', hours:'-'}
+];

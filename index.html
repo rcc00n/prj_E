@@ -1,137 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-    (() => {
-      const t = localStorage.getItem('theme');
-      if (t === 'light') document.documentElement.classList.add('light');
-    })();
-  </script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedLink — Global Private Doctors</title>
+  <title>MedLink</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 
-  <script type="module" src="theme.js"></script>
-  <script defer src="script.js"></script>
+  <script src="theme.js" type="module"></script>
+  <script src="script.js" defer></script>
+  <script src="i18n.js" defer></script>
 </head>
 
 <body>
-  <!-- BURGER -->
-<button id="toggleSidebar" class="burger" aria-label="Toggle menu">
-  <span></span><span></span><span></span>
-</button>
+<button id="toggleSidebar" class="burger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
 
-<!-- ───────────── SIDEBAR ───────────── -->
 <aside id="sidebar" class="sidebar collapsed">
   <header>
-    <span class="logo">MedLink</span>
+    <span class="logo" data-i18n="brand"></span>
     <button id="themeBtn" aria-label="Toggle theme">🌙</button>
   </header>
 
   <nav>
-    <a href="#home"    class="active">Home</a>
-    <a href="services.html">Services</a>
-    <a href="doctors.html">Doctors</a>
-    <a href="#how">How it works</a>
-    <a href="#reviews">Reviews</a>
-    <a href="#contact">Contact</a>
+    <a href="#home" class="active" data-i18n="nav.home"></a>
+    <a href="services.html" data-i18n="nav.services"></a>
+    <a href="doctors.html"  data-i18n="nav.doctors"></a>
+    <a href="#how"     data-i18n="nav.how"></a>
+    <a href="#reviews" data-i18n="nav.reviews"></a>
+    <a href="#contact" data-i18n="nav.contact"></a>
   </nav>
 
-  <!-- Переключатель языка -->
-<div class="lang-switcher">
-  <button class="lang-btn active" data-lang="en">EN</button>
-  <button class="lang-btn" data-lang="ru">RU</button>
-</div>
-
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn"        data-lang="ru">RU</button>
+  </div>
 </aside>
 
 
-  <!-- ───────────── MAIN ───────────── -->
-  <main class="content">
+<!-- ───────────── MAIN ───────────── -->
+<main class="content">
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <h1 data-i18n="hero.title"></h1>
+    <p  data-i18n="hero.subtitle"></p>
+    <a href="doctors.html" class="cta" data-i18n="hero.cta"></a>
+  </section>
 
-    <!-- HERO -->
-    <section id="home" class="hero">
-      <h1>Private Medical Care<br />Anywhere in the World</h1>
-      <p>Connect with certified doctors 24/7, pay securely, travel confidently.</p>
-      <a href="doctors.html" class="cta">Find Your Doctor</a>
-    </section>
+  <!-- DOCTORS -->
+  <section id="doctors" class="doctors">
+    <header class="section-head">
+      <h2 data-i18n="doctors.title"></h2>
+      <p  data-i18n="doctors.subtitle"></p>
+    </header>
+    <div id="doctorCards"></div>
+  </section>
 
-    <!-- DOCTORS -->
-    <section id="doctors" class="doctors">
-      <header class="section-head">
-        <h2>Top Doctors</h2>
-        <p>Hand‑picked specialists with outstanding credentials</p>
-      </header>
-      <div id="doctorCards"></div>
-    </section>
+  <!-- SERVICES -->
+  <section id="services" class="grid">
+    <header class="section-head">
+      <h2 data-i18n="services.title"></h2>
+    </header>
 
-    <!-- SERVICES -->
-    <section id="services" class="grid">
-      <header class="section-head">
-        <h2>Our Services</h2>
-      </header>
+    <article>
+      <h3 data-i18n="services.videoTitle"></h3>
+      <p  data-i18n="services.videoText"></p>
+    </article>
+    <article>
+      <h3 data-i18n="services.secondTitle"></h3>
+      <p  data-i18n="services.secondText"></p>
+    </article>
+    <article>
+      <h3 data-i18n="services.travelTitle"></h3>
+      <p  data-i18n="services.travelText"></p>
+    </article>
+  </section>
 
-      <article>
-        <h3>Video Consultations</h3>
-        <p>Instant HD calls with specialists across 40+ fields.</p>
-      </article>
-      <article>
-        <h3>Second Opinion</h3>
-        <p>Rapid review of diagnostics from top international clinics.</p>
-      </article>
-      <article>
-        <h3>Medical Travel</h3>
-        <p>Full‑service trip planning for surgeries & check‑ups.</p>
-      </article>
-    </section>
+  <!-- HOW IT WORKS -->
+  <section id="how" class="steps">
+    <header class="section-head">
+      <h2 data-i18n="how.title"></h2>
+    </header>
 
-    <!-- HOW IT WORKS -->
-    <section id="how" class="steps">
-      <header class="section-head">
-        <h2>How It Works</h2>
-      </header>
+    <div class="step"><span>1</span><span data-i18n="how.step1"></span></div>
+    <div class="step"><span>2</span><span data-i18n="how.step2"></span></div>
+    <div class="step"><span>3</span><span data-i18n="how.step3"></span></div>
+    <div class="step"><span>4</span><span data-i18n="how.step4"></span></div>
+  </section>
 
-      <div class="step"><span>1</span>Search & Filter Doctors</div>
-      <div class="step"><span>2</span>Book and Pay Online</div>
-      <div class="step"><span>3</span>Meet via Secure Platform</div>
-      <div class="step"><span>4</span>Rate & Receive Records</div>
-    </section>
+  <!-- PATIENT REVIEWS -->
+  <section id="reviews" class="carousel">
+    <header class="section-head">
+      <h2 data-i18n="reviews.title"></h2>
+    </header>
 
-    <!-- PATIENT REVIEWS -->
-    <section id="reviews" class="carousel">
-      <header class="section-head">
-        <h2>Patient Reviews</h2>
-      </header>
+    <blockquote>
+      <span data-i18n="reviews.q1"></span>
+      <cite data-i18n="reviews.q1cite"></cite>
+    </blockquote>
+    <blockquote>
+      <span data-i18n="reviews.q2"></span>
+      <cite data-i18n="reviews.q2cite"></cite>
+    </blockquote>
+  </section>
 
-      <blockquote>
-        “Seamless, fast, and professional. I booked a cardiologist in Germany while sitting in Vancouver.”
-        <cite>— Alex P.</cite>
-      </blockquote>
-      <blockquote>
-        “Saved me thousands by getting a remote second opinion before surgery.”
-        <cite>— Maria L.</cite>
-      </blockquote>
-    </section>
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <h2 data-i18n="contact.title"></h2>
+    <form>
+      <input type="text"  placeholder="" data-i18n-placeholder="contact.namePh" required />
+      <input type="email" placeholder="" data-i18n-placeholder="contact.emailPh" required />
+      <textarea          placeholder="" data-i18n-placeholder="contact.msgPh"   required></textarea>
+      <button type="submit" data-i18n="contact.sendBtn"></button>
+    </form>
+  </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="contact">
-      <h2>Contact Us</h2>
-      <form>
-        <input type="text" placeholder="Name" required />
-        <input type="email" placeholder="Email" required />
-        <textarea placeholder="Message" required></textarea>
-        <button type="submit">Send</button>
-      </form>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
-      © 2025 MedLink. All rights reserved.
-    </footer>
-  </main>
+  <!-- FOOTER -->
+  <footer class="site-footer" data-i18n="footer"></footer>
+</main>
 </body>
 </html>

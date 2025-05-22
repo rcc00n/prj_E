@@ -1,64 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>(()=>{const t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light');})();</script>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MedLink — Doctors</title>
+  <title>MedLink</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 
   <script type="module" src="theme.js"></script>
   <script defer src="script.js"></script>
+  <script defer src="i18n.js"></script>        <!-- общий словарь -->
+  <script defer src="i18n-doctors.js"></script><!-- слова конкретно этой страницы -->
   <script type="module" src="doctors.js"></script>
 </head>
 
 <body>
- <!-- BURGER -->
 <button id="toggleSidebar" class="burger" aria-label="Toggle menu">
   <span></span><span></span><span></span>
 </button>
 
-<!-- ───────────── SIDEBAR ───────────── -->
 <aside id="sidebar" class="sidebar collapsed">
   <header>
-    <span class="logo">MedLink</span>
+    <span class="logo" data-i18n="brand"></span>
     <button id="themeBtn" aria-label="Toggle theme">🌙</button>
   </header>
 
   <nav>
-    <a href="index.html">Home</a>
-      <a href="services.html">Services</a>
-      <a href="doctors.html" class="active">Doctors</a>
-      <a href="index.html#how">How it works</a>
-      <a href="index.html#reviews">Reviews</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
+    <a href="index.html"           data-i18n="nav.home"></a>
+    <a href="services.html"        data-i18n="nav.services"></a>
+    <a href="doctors.html" class="active" data-i18n="nav.doctors"></a>
+    <a href="index.html#how"       data-i18n="nav.how"></a>
+    <a href="index.html#reviews"   data-i18n="nav.reviews"></a>
+    <a href="index.html#contact"   data-i18n="nav.contact"></a>
+  </nav>
 
-    <!-- Переключатель языка -->
-<div class="lang-switcher">
-  <button class="lang-btn active" data-lang="en">EN</button>
-  <button class="lang-btn" data-lang="ru">RU</button>
-</div>
-
+  <div class="lang-switcher">
+    <button type="button" class="lang-btn" data-lang="en">EN</button>
+    <button type="button" class="lang-btn" data-lang="ru">RU</button>
+  </div>
 </aside>
 
+<main class="content">
+  <section class="page-hero">
+    <h1 data-i18n="doc.heroTitle"></h1>
+    <input id="search" type="search" data-i18n-placeholder="doc.searchPh"/>
+  </section>
 
-  <!-- MAIN -->
-  <main class="content">
-    <section class="page-hero">
-      <h1>Find the Right Specialist</h1>
-      <input id="search" type="search" placeholder="Search by name or specialty…"/>
-    </section>
+  <section id="doctorList" class="doctors grid"></section>
 
-    <section id="doctorList" class="doctors grid"></section>
-     <!-- FOOTER -->
-    <footer class="site-footer">
-      © 2025 MedLink. All rights reserved.
-    </footer>
-
-  </main>
-
-  
+  <footer class="site-footer" data-i18n="footer"></footer>
+</main>
 </body>
 </html>
