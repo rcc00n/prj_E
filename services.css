@@ -1,6 +1,6 @@
 /* --- Services Page Specific Styles --- */
 :root{
-  --hero-blue: hsl(220 85% 48%); /* чуть темнее accent */
+  --hero-blue: hsl(220 85% 36%); /* чуть темнее accent */
 }
 
 /* Hero section override */

@@ -1,17 +1,14 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const root = document.documentElement;
-    const btn  = document.getElementById('themeBtn');
-  
-    updateIcon();                         // показываем 🌞 или 🌙
-  
-    btn.addEventListener('click', () => {
-      root.classList.toggle('light');
-      localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'night');
-      updateIcon();
-    });
-  
-    function updateIcon() {
-      btn.textContent = root.classList.contains('light') ? '🌞' : '🌙';
-    }
-  });
-  
+/* theme.js — единая логика светлой/тёмной темы */
+
+/* 1. текущий режим */
+const root = document.documentElement;
+const saved = localStorage.getItem('theme');
+if (saved === 'light') root.classList.add('light');   // ранняя инициализация
+
+/* 2. переключатель */
+const themeBtn = document.getElementById('themeBtn');
+themeBtn?.addEventListener('click', () => {
+  const nowLight = root.classList.toggle('light');    // переключили класс
+  /* 3. запомнили результат */
+  localStorage.setItem('theme', nowLight ? 'light' : 'dark');
+});

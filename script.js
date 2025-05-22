@@ -36,37 +36,41 @@ burger.addEventListener('click', () => setCollapsed(!sidebar.classList.contains(
 setCollapsed(localStorage.getItem('sidebarClosed') === '1');
 
 
-/* ─────────  IN-PAGE NAV HIGHLIGHT  ───────── */
+//* ───── IN-PAGE NAV HIGHLIGHT (v2) ───── */
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ссылки внутри сайдбара, ведущие к якорям на текущей странице
+  /* ссылки вида  <a href="#...">  внутри сайдбара */
   const anchorLinks = [...document.querySelectorAll('.sidebar nav a[href^="#"]')];
 
-  // секции, у которых есть id (hero мы пропустим — стартовая позиция подсвечивается по клику Home)
-  const sections = [...document.querySelectorAll('main section[id]')];
+  /* какие id фигурируют в этих ссылках?  (#home, #how, …) */
+  const watchedIDs = anchorLinks.map(l => l.getAttribute('href').slice(1));
 
-  /* ① Подсветка при клике */
-  anchorLinks.forEach(link => link.addEventListener('click', () => {
-    // снимаем актив с остальных
-    document.querySelectorAll('.sidebar nav a.active')
-            .forEach(l => l.classList.remove('active'));
-    // ставим актив на выбранную ссылку
-    link.classList.add('active');
-  }));
+  /* берём только те секции, чей id присутствует в watchedIDs */
+  const sections = watchedIDs
+    .map(id => document.getElementById(id))
+    .filter(Boolean);                           // на всякий случай
 
-  /* ② Подсветка при прокрутке */
+  /* клик по меню — актив сразу */
+  anchorLinks.forEach(link =>
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.sidebar nav a.active')
+              .forEach(l=>l.classList.remove('active'));
+      link.classList.add('active');
+    })
+  );
+
+  /* подсветка при прокрутке */
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const id = entry.target.id;
         anchorLinks.forEach(link => {
-          // актив, если href == #id текущей секции
           link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
         });
       }
     });
   }, {
-    rootMargin: '-50% 0px -40% 0px' // срабатывает, когда секция ~по центру экрана
+    rootMargin: '-50% 0px -40% 0px'   // секция приблизительно в центре
   });
 
   sections.forEach(sec => observer.observe(sec));
