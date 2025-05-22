@@ -71,3 +71,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sections.forEach(sec => observer.observe(sec));
 });
+
+
+// логика переключения страниц и запоминание выбора
+document.querySelectorAll('.lang-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.classList.contains('active')) return;        // уже выбран
+    const lang = btn.dataset.lang;
+    localStorage.setItem('lang', lang);                 // запомнили выбор
+
+    // меняем имя файла: page.html  <->  page-ru.html
+    const path = location.pathname;
+    const ruRe = /-ru(\.html)$/;
+    let target = path;
+
+    if(lang==='ru' && !ruRe.test(path)){
+      target = path.replace(/\.html$/, '-ru.html');
+    }else if(lang==='en' && ruRe.test(path)){
+      target = path.replace(ruRe, '.html');
+    }
+    location.href = target;
+  });
+});
+
+// при входе с другой страницы — подсветить активный
+const pref = localStorage.getItem('lang') || 'en';
+document.querySelectorAll('.lang-btn').forEach(b=>{
+  b.classList.toggle('active', b.dataset.lang===pref);
+});

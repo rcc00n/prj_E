@@ -260,3 +260,33 @@ html.light{ --hero-overlay:rgba(255,255,255,.55); }   /* осветляем в �
   color:#fff !important;
   text-shadow:0 3px 8px #000a;
 }
+
+/* Переключатель языка под меню */
+.lang-switcher{
+  display:flex;
+  gap:.5rem;
+  margin:1.5rem 1rem 0;
+}
+
+.lang-btn{
+  flex:1;                       /* оба равной ширины */
+  padding:.25rem .75rem;
+  font-size:.9rem;
+  background:transparent;
+  border:1px solid var(--card);
+  border-radius:var(--radius);
+  color:var(--text);
+  cursor:pointer;
+  transition:background var(--transition),color var(--transition),border-color var(--transition);
+}
+
+.lang-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.lang-btn.active{
+  background:var(--accent);
+  color:#fff;
+  cursor:default;
+}
