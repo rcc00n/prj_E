@@ -1,4 +1,7 @@
 /* --- Services Page Specific Styles --- */
+:root{
+  --hero-blue: hsl(220 85% 48%); /* чуть темнее accent */
+}
 
 /* Hero section override */
 .services-hero {
@@ -6,8 +9,12 @@
   background-blend-mode: multiply;
   background-color: rgba(0,36,96,0.55);
   /* (Inherits min-height, padding, etc., from .hero in main CSS) */
+  
 }
-
+.services-hero h1,
+.services-hero p{
+  color: var(--hero-blue);
+}
 /* Stats section */
 .stats {
   padding: 3rem 10vw;
