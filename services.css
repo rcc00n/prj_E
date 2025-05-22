@@ -227,3 +227,11 @@ html.light .doctors-section .accordion-header::after{border-color:#14213d;}
 .doctors-section .accordion-item{
   margin-bottom: .8rem;   /* was 2rem */
 }
+
+html.light .doctors-section .accordion-panel{
+  color:#14213d;            /* насыщенный тёмно-синий из переменной --text */
+}
+
+html.light .doctors-section .accordion-panel strong{
+  color:#14213d;            /* подчёркиваем важные фразы тем же оттенком */
+}

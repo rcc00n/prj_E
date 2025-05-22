@@ -34,3 +34,40 @@ function setCollapsed(state){
 }
 burger.addEventListener('click', () => setCollapsed(!sidebar.classList.contains('collapsed')));
 setCollapsed(localStorage.getItem('sidebarClosed') === '1');
+
+
+/* ─────────  IN-PAGE NAV HIGHLIGHT  ───────── */
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ссылки внутри сайдбара, ведущие к якорям на текущей странице
+  const anchorLinks = [...document.querySelectorAll('.sidebar nav a[href^="#"]')];
+
+  // секции, у которых есть id (hero мы пропустим — стартовая позиция подсвечивается по клику Home)
+  const sections = [...document.querySelectorAll('main section[id]')];
+
+  /* ① Подсветка при клике */
+  anchorLinks.forEach(link => link.addEventListener('click', () => {
+    // снимаем актив с остальных
+    document.querySelectorAll('.sidebar nav a.active')
+            .forEach(l => l.classList.remove('active'));
+    // ставим актив на выбранную ссылку
+    link.classList.add('active');
+  }));
+
+  /* ② Подсветка при прокрутке */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        anchorLinks.forEach(link => {
+          // актив, если href == #id текущей секции
+          link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  }, {
+    rootMargin: '-50% 0px -40% 0px' // срабатывает, когда секция ~по центру экрана
+  });
+
+  sections.forEach(sec => observer.observe(sec));
+});
