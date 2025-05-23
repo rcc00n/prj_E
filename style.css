@@ -96,6 +96,7 @@ body.sidebar-collapsed .content{margin-left:0;max-width:100vw;}
   min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
   padding:6rem 10vw;background:url('https://images.unsplash.com/photo-1604537466573-1ecb84c2b7aa?auto=format&fit=crop&w=2100&q=80') center/cover no-repeat;
   background-blend-mode:multiply;background-color:rgba(0,36,96,.55);
+  overflow-anchor:none; 
 }
 .hero h1{font-size:3rem;line-height:1.2;margin-bottom:1rem;}
 .hero p{font-size:1.2rem;margin-bottom:2rem;max-width:30rem;}
@@ -303,3 +304,102 @@ html.light{ --hero-overlay:rgba(255,255,255,.55); }   /* осветляем в �
 .lang-btn:hover{border-color:var(--accent);color:var(--accent);}
 .lang-btn.active{background:var(--accent);color:#fff;cursor:default;}
 
+/* ===== style.css  — вставьте в самый конец ===== */
+
+/* 1. Плавное появление блоков при прокрутке */
+.fade-in{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .6s ease-out,transform .6s ease-out;
+}
+.fade-in.visible{
+  opacity:1;transform:none;
+}
+
+/* 2. Автосмена цитат (см. JS) */
+#reviews blockquote{
+  opacity:0;
+  transition:opacity .6s ease-in-out;
+  will-change:opacity;
+}
+#reviews blockquote.show{opacity:1;}
+
+/* 3. Parallax-эффект шапки */
+.hero.parallax{
+  background-attachment:fixed;              /* fallback */
+  will-change:transform;
+}
+
+/* 4. 3-D-наклон карточек врачей */
+.doctors .card{
+  perspective:800px;
+  transition:transform .35s;
+}
+.doctors .card:hover{transform:rotateX(var(--rx)) rotateY(var(--ry));}
+
+
+/* ==== OUR SERVICES · softer hover ==== */
+/* drop this **after** the previous block — it will override it */
+
+/* base card tweak */
+#services article{
+  transition:transform .35s cubic-bezier(.22,1,.36,1),
+             box-shadow .35s;
+}
+#services article:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 24px #0003;
+}
+
+/* faint diagonal glow */
+#services article::before{
+  background:linear-gradient(135deg,var(--accent) 0%,transparent 70%);
+  opacity:0;                           /* hidden by default  */
+  transform:scale(1.2) rotate(6deg);
+  transition:opacity .4s;
+}
+#services article:hover::before{opacity:.06;}  /* barely-visible tint */
+
+/* bottom underline instead of full-width bar */
+#services article::after{
+  content:"";
+  position:absolute;left:50%;bottom:0;
+  height:2px;width:0;
+  background:var(--accent);
+  transform:translateX(-50%);
+  transition:width .35s;
+  border-radius:1px;
+}
+#services article:hover::after{width:90%;}
+
+/* === compact reviews: фиксированная высота, скрытие через display === */
+#reviews{padding-block:3rem;overflow:hidden}
+
+#reviews .rev-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;                 /* расстояние между двумя видимыми блоками */
+  max-width:520px;
+  margin-inline:auto;
+}
+
+#reviews blockquote{
+  margin:0;
+  padding:1rem 1.4rem;
+  background:var(--card);
+  border-radius:var(--radius);
+  font-size:.95rem;
+  line-height:1.4;
+
+  /* анимация только появления */
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .3s,transform .3s;
+  display:none;             /* главное! — не занимает места */
+}
+
+#reviews blockquote.show{
+  display:block;            /* снова участвует в потоке */
+  opacity:1;
+  transform:none;
+}

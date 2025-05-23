@@ -116,7 +116,7 @@ if (cardsBox){                 // код запускается только н�
       if(!res.ok) throw new Error(res.status);
       const all = await res.json();
       // возьмём первые 6 (или меньше, если данных меньше)
-      topDoctors = all.slice(0,6);
+      topDoctors = all.slice(0,4);
     }catch(e){
       console.error('Top-docs load error:', e);
       topDoctors = [];
@@ -145,3 +145,78 @@ if (cardsBox){                 // код запускается только н�
     loadTop(lang);
   });
 }
+
+
+/* ===== script.js  — вставьте в самый конец ===== */
+
+/* ─── 1. Scroll-fade для .fade-in ─── */
+(() => {
+  const io = new IntersectionObserver(e=>{
+    e.forEach(x=>{
+      if(x.isIntersecting){
+        x.target.classList.add('visible');
+        io.unobserve(x.target);
+      }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.fade-in').forEach(s=>io.observe(s));
+})();
+
+/* ─── 2. Параллакс заголовка ─── */
+(() => {
+  const hero = document.querySelector('.hero.parallax');
+  if(!hero) return;
+  const onScroll = () => {
+    const y = window.scrollY * .4;          // скорость параллакса
+    hero.style.transform = `translateY(${y}px)`;
+  };
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+
+/* ─── 3. Автосмена отзывов ─── */
+(() => {
+  const quotes = [...document.querySelectorAll('#reviews blockquote')];
+  if(!quotes.length) return;
+  let i = 0; quotes[0].classList.add('show');
+  setInterval(()=>{
+    quotes[i].classList.remove('show');
+    i = (i+1) % quotes.length;
+    quotes[i].classList.add('show');
+  }, 6000);
+})();
+
+/* ─── 4. 3-D tilt карточек ─── */
+(() => {
+  const cards = document.querySelectorAll('.doctors .card');
+  cards.forEach(c=>{
+    c.addEventListener('mousemove', e=>{
+      const b = c.getBoundingClientRect();
+      const rx = ((e.clientY - b.top)  / b.height - .5) * -10;
+      const ry = ((e.clientX - b.left) / b.width  - .5) *  10;
+      c.style.setProperty('--rx', rx+'deg');
+      c.style.setProperty('--ry', ry+'deg');
+    });
+    c.addEventListener('mouseleave', ()=>c.style.setProperty('--rx','0deg'));
+  });
+})();
+
+/* === reviews rotation ===  (вставьте внизу script.js) */
+/* ===== reviews rotation (фикс-2, та же позиция) ===== */
+(()=>{
+  const wrap = document.querySelector('#reviews .rev-wrap');
+  if(!wrap) return;
+
+  const cards = [...wrap.children];
+  const STEP  = 2;      // показываем две карточки
+  const SPEED = 3000;   // 3 с между сменами
+  let idx = 0;
+
+  function cycle(){
+    cards.forEach((c,i)=>{
+      c.classList.toggle('show', i>=idx && i<idx+STEP);
+    });
+    idx = (idx + STEP) % cards.length;
+  }
+  cycle();                       // первый вывод
+  setInterval(cycle, SPEED);     // дальше по кругу
+})();
