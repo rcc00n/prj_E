@@ -221,3 +221,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     b.addEventListener('click',()=>setLang(b.dataset.lang));
   });
 });
+
+/* =====  ДОБАВЬ в i18n.js после существующих переводов  ===== */
+Object.assign(translations.en,{
+  "modal.book":"Book Appointment",
+  "form.title":"Appointment request",
+  "form.send":"Send",
+  "form.name":"Name",
+  "form.email":"Email",
+  "form.phone":"Phone"
+});
+
+Object.assign(translations.ru,{
+  "modal.book":"Записаться",
+  "form.title":"Запрос на приём",
+  "form.send":"Отправить",
+  "form.name":"Имя",
+  "form.email":"E-mail",
+  "form.phone":"Телефон"
+});
+

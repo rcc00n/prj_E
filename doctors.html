@@ -14,6 +14,42 @@
   <script defer src="i18n-doctors.js"></script><!-- слова конкретно этой страницы -->
   <script type="module" src="doctors.js"></script>
 </head>
+<!-- вставь ПЕРЕД </body> в doctors.html (и/или index.html) -->
+<div id="doctorModal" class="modal" aria-hidden="true">
+  <div class="modal-overlay"></div>
+
+  <div class="modal-content" role="dialog">
+    <button class="modal-close" aria-label="Book">×</button>
+
+    <!-- карточка-профиль -->
+    <div class="profile-view">
+      <img id="modalPhoto" alt="">
+      <h2 id="doctorModalTitle"></h2>
+      <p id="modalSpecialty"></p>
+      <p id="modalBio"></p>
+
+      <div id="modalContact"></div>
+      <p id="modalHours"></p>
+
+     <button class="book-btn btn-outline">Book</button>
+    </div>
+
+    <!-- форма записи -->
+    <!-- =====  ВМЕСТО старой .form-view  (doctors.html / index.html)  ===== -->
+<div class="form-view" style="display:none">
+  <h2 data-i18n="form.title"></h2>
+
+  <form id="appointmentForm" class="app-form">
+    <input name="name"   data-i18n-ph="form.name"  required>
+    <input name="email"  type="email" data-i18n-ph="form.email" required>
+    <input name="phone"  type="tel"   data-i18n-ph="form.phone" required>
+
+    <button type="submit" data-i18n="form.send"></button>
+  </form>
+</div>
+
+  </div>
+</div>
 
 <body>
 <button id="toggleSidebar" class="burger" aria-label="Toggle menu">

@@ -403,3 +403,155 @@ html.light{ --hero-overlay:rgba(255,255,255,.55); }   /* осветляем в �
   opacity:1;
   transform:none;
 }
+
+/* === MODAL RE-STYLE === */
+.modal{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .4s ease;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+  z-index:1050;
+}
+.modal.show{opacity:1;pointer-events:auto;}
+
+/* glass card */
+/* --- расширенная карточка и комфортный текст --- */
+.modal-content{
+  /* шире и заметно выше */
+  max-width:720px;    /* +140 px */
+  width:92%;
+  max-height:88vh;    /* чтобы влазила в экран, но места много */
+  padding:3rem 3.6rem 3.4rem;
+}
+
+/* больше «воздуха» между строками и блоками */
+.profile-view{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:.55rem;         /* вертикальный зазор между элементами */
+}
+
+/* заголовок и параграфы читаются легче */
+.profile-view h2{margin:.6rem 0 .4rem;font-size:1.75rem;}
+.profile-view p{
+  margin:.5rem 0;
+  line-height:1.65;   /* просторная межстрочная */
+  letter-spacing:.015em;
+  font-size:1rem;
+}
+
+/* если нужен «мастер»-зазор и для формы */
+.form-view p{margin:.6rem 0;line-height:1.6;}
+
+.modal-close:hover{transform:rotate(90deg);}
+
+/* profile layout tweaks */
+.profile-view{display:flex;flex-direction:column;align-items:center;text-align:center;}
+.profile-view img{width:140px;height:140px;border-radius:50%;object-fit:cover;margin-bottom:1.2rem;box-shadow:0 6px 14px rgba(0,0,0,.4);}
+.profile-view h2{margin:.4rem 0 .25rem;font-size:1.65rem;color:var(--accent);}
+.profile-view p{margin:.3rem 0;font-size:.95rem;opacity:.9;}
+
+/* === BUTTONS === */
+.book-btn,
+.form-view button{
+  --grad-from:var(--accent);
+  --grad-to:#6ea8ff;
+  display:inline-block;width:100%;padding:1rem 1.2rem;
+  font:600 1rem/1 'Inter',sans-serif;text-transform:uppercase;letter-spacing:.03em;
+  color:#fff;background:linear-gradient(135deg,var(--grad-from),var(--grad-to));
+  border:none;border-radius:calc(var(--radius) + 4px);cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.35);transition:transform .22s ease,box-shadow .22s ease;
+}
+.book-btn:hover,
+.form-view button:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+.book-btn:active,
+.form-view button:active{transform:translateY(0);box-shadow:0 4px 14px rgba(0,0,0,.35);}
+
+/* outline variant (optional) */
+.btn-outline{
+  background:none;color:var(--accent);border:2px solid var(--accent);
+  box-shadow:none;
+}
+.btn-outline:hover{background:var(--accent);color:#fff}
+
+/* === ANIMATIONS === */
+@keyframes pop{
+  0%{transform:scale(.88) translateY(20px);opacity:0;}
+  100%{transform:scale(1) translateY(0);opacity:1;}
+}
+
+/* — красивый «крестик» с блюром и анимацией — */
+/* — крестик крупнее — */
+/* кнопка-контейнер – можно оставить как раньше */
+.modal-close{
+  position:absolute;top:1.1rem;right:1.1rem;
+  width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.14);
+  border:2px solid rgba(255,255,255,.24);
+  border-radius:50%;cursor:pointer;
+  backdrop-filter:blur(6px) saturate(160%);
+  color:var(--text);
+  transition:transform .25s ease,background .25s ease;
+}
+
+/* увеличиваем САМ SVG и запрещаем внешним стилям его переопределять */
+.modal-close svg{
+  width:38px !important;   /* ← было 22-30, теперь реально больше */
+  height:38px !important;
+}
+
+/* делаем линии толще, чтобы они не «терялись» при масштабировании */
+.modal-close svg path{
+  stroke-width:3.5;        /* вместо 2.5 */
+}
+
+.modal-close:hover{
+  transform:rotate(90deg) scale(1.08);
+  background:rgba(255,255,255,.22);
+}
+
+.modal-close:focus{outline:none;}
+
+/* ── FORM VIEW  ───────────────────────────────────────────── */
+.form-view{
+  display:flex;flex-direction:column;align-items:center;
+  gap:1.6rem;text-align:left;width:100%;
+}
+
+#appointmentTitle{
+  font-size:1.8rem;font-weight:700;margin-bottom:.2rem;
+}
+
+/* grid-верстка для инпутов: адаптивно 1-3 столбца */
+#appointmentForm{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1rem 1.2rem;
+}
+
+/* «стеклянные» поля */
+#appointmentForm input{
+  background:rgba(255,255,255,.10);
+  border:2px solid rgba(255,255,255,.22);
+  border-radius:calc(var(--radius) + 2px);
+  padding:1rem 1.2rem;font:500 1rem/1 'Inter',sans-serif;
+  color:var(--text);backdrop-filter:blur(18px) saturate(140%);
+  transition:border-color .25s ease,background .25s ease;
+}
+#appointmentForm input::placeholder{color:rgba(255,255,255,.6);}
+#appointmentForm input:focus{
+  border-color:var(--accent);background:rgba(255,255,255,.16);outline:none;
+}
+
+/* кнопка-градиент на всю ширину сетки */
+#appointmentForm button{
+  grid-column:1/-1;
+  --from:var(--accent);--to:#65a8ff;
+  width:100%;padding:1.05rem 1.2rem;margin-top:.4rem;
+  font:600 1rem/1 'Inter',sans-serif;text-transform:uppercase;letter-spacing:.03em;
+  color:#fff;background:linear-gradient(135deg,var(--from),var(--to));
+  border:none;border-radius:calc(var(--radius) + 6px);cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  transition:transform .22s ease,box-shadow .22s ease;
+}
+#appointmentForm button:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.45);}
+#appointmentForm button:active{transform:translateY(0);box-shadow:0 6px 20px rgba(0,0,0,.35);}
