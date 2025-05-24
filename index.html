@@ -11,7 +11,41 @@
   <script src="theme.js" type="module"></script>
   <script src="script.js" defer></script>
   <script src="i18n.js" defer></script>
+<script defer src="auth.js"></script>
+
 </head>
+
+
+<div id="authModal" class="modal" aria-hidden="true">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <button class="modal-close" aria-label="Close">×</button>
+
+    <!-- LOGIN -->
+    <div class="login-view">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input name="email"    type="email"    placeholder="Email"    required>
+        <input name="password" type="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+      </form>
+      <p><a href="#" id="toSignup">Create account?</a></p>
+    </div>
+
+    <!-- SIGN-UP -->
+    <div class="signup-view" style="display:none">
+      <h2>Sign Up</h2>
+      <form id="signupForm">
+        <input name="name"     placeholder="Name"     required>
+        <input name="email"    type="email"    placeholder="Email"    required>
+        <input name="password" type="password" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+      <p><a href="#" id="toLogin">Have account?</a></p>
+    </div>
+  </div>
+</div>
+
 
 <body>
 <button id="toggleSidebar" class="burger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
@@ -30,11 +64,23 @@
     <a href="#reviews" data-i18n="nav.reviews"></a>
     <a href="#contact" data-i18n="nav.contact"></a>
   </nav>
+ <div class="spacer"></div>
 
+ <!-- auth links -->
+<div class="auth-links">
+  <a class="btn-auth btn-outline" href="#"
+     id="openLogin"  data-i18n="auth.login"></a>
+  <a class="btn-auth" href="#"
+     id="openSignup" data-i18n="auth.signup"></a>
+</div>
+
+  <!-- язык -->
   <div class="lang-switcher">
-    <button class="lang-btn active" data-lang="en">EN</button>
-    <button class="lang-btn"        data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="ru">RU</button>
   </div>
+
+ 
 </aside>
 
 
@@ -88,13 +134,12 @@
     <div class="step"><span>4</span><span data-i18n="how.step4"></span></div>
   </section>
 
-   <!-- === PATIENT REVIEWS (home) === -->
+   <!-- === PATIENT REVIEWS === -->
 <section id="reviews" class="fade-in">
   <header class="section-head">
     <h2 data-i18n="reviews.title"></h2>
   </header>
 
-  <!-- показываем-по-две, остальные скрыты скриптом -->
   <div class="rev-wrap">
     <blockquote><span data-i18n="reviews.q1"></span><cite data-i18n="reviews.q1cite"></cite></blockquote>
     <blockquote><span data-i18n="reviews.q2"></span><cite data-i18n="reviews.q2cite"></cite></blockquote>

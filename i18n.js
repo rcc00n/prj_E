@@ -241,3 +241,12 @@ Object.assign(translations.ru,{
   "form.phone":"Телефон"
 });
 
+/* === AUTH === */
+Object.assign(T.en,{
+  "auth.login" :"Log in",
+  "auth.signup":"Sign up"
+});
+Object.assign(T.ru,{
+  "auth.login" :"Войти",
+  "auth.signup":"Регистрация"
+});

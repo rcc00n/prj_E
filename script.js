@@ -21,7 +21,6 @@ function makeCard(d){
     </article>`;
 }
 
-/* SIDEBAR TOGGLE (без изменений) */
 const burger  = document.getElementById('toggleSidebar');
 const sidebar = document.getElementById('sidebar');
 const body    = document.body;
@@ -32,8 +31,11 @@ function setCollapsed(state){
   body   .classList.toggle('sidebar-collapsed', state);
   localStorage.setItem('sidebarClosed', state ? '1' : '0');
 }
-burger.addEventListener('click', () => setCollapsed(!sidebar.classList.contains('collapsed')));
-setCollapsed(localStorage.getItem('sidebarClosed') === '1');
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setCollapsed(localStorage.getItem('sidebarClosed') === '1'); // начальное
+  burger.addEventListener('click',()=>setCollapsed(!sidebar.classList.contains('collapsed')));
+});
 
 
 //* ───── IN-PAGE NAV HIGHLIGHT (v2) ───── */

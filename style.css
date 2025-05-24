@@ -555,3 +555,98 @@ html.light{ --hero-overlay:rgba(255,255,255,.55); }   /* осветляем в �
 }
 #appointmentForm button:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.45);}
 #appointmentForm button:active{transform:translateY(0);box-shadow:0 6px 20px rgba(0,0,0,.35);}
+
+/* style.css – в конец */
+
+/* style.css */
+/* === sidebar layout fix === */
+.sidebar{display:flex;flex-direction:column}
+
+/* навигация занимает всё оставшееся, если ссылок много — прокручивается */
+.sidebar nav{flex:1 1 auto;overflow-y:auto}
+
+/* нижний блок сам упирается в низ благодаря margin-top:auto */
+.lang-switcher{margin-top:auto;display:flex;flex-direction:column;gap:.6rem}
+
+/* кнопки авторизации сразу под языком */
+.auth-links{display:flex;flex-direction:column;gap:.6rem;margin-top:.8rem}
+
+/* кнопки авторизации и языка — норм. отступы */
+.lang-switcher,
+.auth-links{display:flex;flex-direction:column;gap:.6rem;margin-top:0}
+
+.btn-auth{
+  display:block;padding:.75rem 1rem;border-radius:var(--radius);
+  background:none;border:2px solid var(--accent);
+    color:#fff;text-align:center;font-weight:600;
+  transition:background .25s,color .25s;
+}
+.btn-auth:hover{background:var(--accent); color:#000;   }
+
+/* более компактный header */
+.sidebar header{
+  padding:1rem 1.5rem;      /* было больше отступов */
+  margin-bottom:1rem;       /* был крупный зазор */
+}
+
+/* nav растёт по максимуму, прокручивается, и
+   min-height:0 разрешает ему занимать ВСЮ высоту */
+.sidebar nav{
+  flex:1 1 auto;
+  min-height:0;             /* ключевой момент */
+  overflow-y:auto;
+  padding-right:.25rem;     /* небольшой отступ от скролла */
+}
+
+/* необязательный бонус: чуть шире и стильнее скролл */
+.sidebar nav::-webkit-scrollbar{width:8px}
+.sidebar nav::-webkit-scrollbar-track{background:transparent}
+.sidebar nav::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.25);border-radius:4px}
+.sidebar nav:hover::-webkit-scrollbar-thumb{background:var(--accent)}
+
+/*  auth buttons  */
+.auth-links{display:flex;flex-direction:column;gap:.9rem;margin-top:auto;}
+.btn-auth{
+  display:block;padding:.9rem 1rem;font:600 1rem/1 'Inter',sans-serif;
+  text-align:center;border-radius:var(--radius);cursor:pointer;
+  transition:background .25s,box-shadow .25s;
+}
+.btn-auth.btn-outline{ /* «Login» – обводка */
+  background:none;color:var(--accent);border:2px solid var(--accent);
+}
+.btn-auth:not(.btn-outline){ /* «Sign Up» – заливка */
+  background:var(--accent);color:#fff;border:none;
+}
+.btn-auth:hover{box-shadow:0 4px 16px #0003;transform:translateY(-2px);}
+
+/* auth buttons */
+.auth-links{
+  margin-top:auto;        /* прижимает к низу */
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+.btn-auth{
+  display:block;
+  width:100%;
+  padding:.9rem 1rem;
+  font:600 1rem/1 'Inter',sans-serif;
+  text-align:center;
+  border-radius:var(--radius);
+  transition:background .25s, color .25s;
+}
+.btn-auth.btn-outline{
+  color:var(--accent);
+  background:none;
+  border:2px solid var(--accent);
+}
+.btn-auth.btn-outline:hover{background:var(--accent);color:#fff}
+.btn-auth:not(.btn-outline){
+  background:var(--accent);
+  color:#fff;
+  border:none;
+}
+.btn-auth:not(.btn-outline):hover{
+  filter:brightness(1.1);
+}
