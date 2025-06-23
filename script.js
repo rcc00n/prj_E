@@ -222,3 +222,46 @@ if (cardsBox){                 // код запускается только н�
   cycle();                       // первый вывод
   setInterval(cycle, SPEED);     // дальше по кругу
 })();
+
+/* ───── script.js  (в самом конце) ───── */
+// === session check ===
+document.addEventListener('DOMContentLoaded',async()=>{
+  const links = document.querySelector('.auth-links');
+  if(!links) return;
+  try{
+    const r = await fetch('/api/session',{credentials:'include'});
+    if(r.ok) links.style.display = 'none';   // ← вместо .remove()
+  }catch{}
+});
+
+/* === script.js → ЗАМЕНИ прошлую вставку «Dashboard-link» === */
+(async () => {
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+
+  /* прячем блок авторизации, если сессия есть */
+  const auth = sidebar.querySelector('.auth-links');
+  const r    = await fetch('/api/session', { credentials: 'include' }).catch(()=>{});
+  if (!r || !r.ok) return;
+
+  const { role } = await r.json();
+  if (auth) auth.style.display = 'none';
+
+  /* удаляем старые варианты */
+  sidebar.querySelectorAll('.dash-icon').forEach(el => el.remove());
+
+  /* компактная иконка */
+  const link = document.createElement('a');
+  link.className = 'dash-icon';
+  link.href      = role === 'doctor'
+                   ? 'doctor-dashboard.html'
+                   : 'patient-dashboard.html';
+  link.title     = 'Dashboard';
+  link.innerHTML = `
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"
+         aria-hidden="true">
+      <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-3.1 0-9 1.55-9 4.65V22h18v-3.35C21 15.55 15.1 14 12 14Z"/>
+    </svg>`;
+  /* вставляем ПЕРВЫМ ребёнком header */
+  sidebar.querySelector('header').prepend(link);
+})();

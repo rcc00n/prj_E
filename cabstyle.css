@@ -1,0 +1,57 @@
+/* cabstyle.css */
+/* import shared color variables and fonts */
+@import url("style.css");
+
+/* --- DASHBOARD LAYOUT --- */
+body.dashboard{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  gap:2rem;
+  padding:3rem clamp(1rem,4vw,4rem);
+  background:var(--bg);
+  color:var(--text);
+}
+.dashboard h1{
+  font-size:clamp(1.8rem,5vw,2.8rem);
+  font-weight:700;
+  text-align:center;
+  margin-bottom:1rem;
+}
+.dash-section{
+  padding:1.8rem 2rem;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(7px);
+  box-shadow:0 8px 28px rgba(0,0,0,.25);
+}
+.dash-section + .dash-section{margin-top:1.5rem}
+.dash-section h2{
+  font-size:1.25rem;
+  margin:0 0 .9rem;
+}
+/* table-stub for future bookings */
+.table-stub{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.95rem;
+}
+.table-stub th,
+.table-stub td{
+  padding:.6rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.table-stub th{text-align:left;font-weight:600;color:var(--accent)}
+.table-stub td.empty{color:rgba(255,255,255,.45);text-align:center}
+
+
+.dash-link{
+  display:block;padding:.8rem 1rem;margin-bottom:.8rem;font-weight:600;
+  border-radius:var(--radius);text-align:center;color:#fff;
+  background:linear-gradient(145deg,var(--accent) 0%,#007aff 100%);
+  box-shadow:0 6px 18px rgba(0,85,255,.35);
+  transition:transform .15s,box-shadow .3s;
+}
+.dash-link:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,85,255,.45)}
+.dash-link:active{transform:none;box-shadow:0 4px 12px rgba(0,85,255,.25)}

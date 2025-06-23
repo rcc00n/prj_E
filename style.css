@@ -650,3 +650,90 @@ html.light{ --hero-overlay:rgba(255,255,255,.55); }   /* осветляем в �
 .btn-auth:not(.btn-outline):hover{
   filter:brightness(1.1);
 }
+
+/* style.css  → add to the very end */
+.signup-view fieldset.role-select{
+  margin:.9rem 0 1.2rem; padding:.7rem 1rem;
+  border:1px solid var(--card); border-radius:var(--radius);
+  display:flex; gap:1.5rem; justify-content:center;
+  backdrop-filter:blur(2px); background:rgba(255,255,255,.04);
+}
+.role-select legend{padding:0 .4rem;font-size:.85rem;color:var(--text)}
+.role-select label{display:flex;align-items:center;gap:.45rem;cursor:pointer}
+.role-select input[type=radio]{
+  appearance:none;width:1rem;height:1rem;border:2px solid var(--accent);
+  border-radius:50%;position:relative;cursor:pointer;
+}
+.role-select input[type=radio]:checked::before{
+  content:"";position:absolute;inset:.22rem;border-radius:50%;background:var(--accent);
+}
+
+/* style.css  → ВСТАВЬ В КОНЕЦ */
+
+/* uniform controls */
+.auth-form{display:grid;gap:1rem}
+.form-control{
+  width:100%;padding:.75rem 1rem;font-size:1rem;
+  border:1px solid var(--card);border-radius:var(--radius);
+  background:rgba(255,255,255,.08);color:var(--text);
+  backdrop-filter:blur(6px);transition:border .25s,var(--transition);
+}
+.form-control::placeholder{color:var(--text);opacity:.55}
+.form-control:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 60%,transparent);
+}
+
+/* main CTA */
+.btn-main{
+  padding:.75rem 2.2rem;font-weight:600;
+  border:0;border-radius:calc(var(--radius) + 4px);
+  color:#fff;background:linear-gradient(145deg,var(--accent) 0%,#007aff 100%);
+  cursor:pointer;box-shadow:0 6px 18px rgba(0,85,255,.35);
+  transition:transform .15s ease,box-shadow .3s ease;
+}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,85,255,.45)}
+.btn-main:active{transform:translateY(0);box-shadow:0 4px 12px rgba(0,85,255,.25)}
+
+/* signup-view tweaks */
+.signup-view .role-select{
+  background:rgba(20,24,34,.88);   /* было .04 → стало почти непрозрачным */
+  border:1px solid rgba(255,255,255,.12);
+  backdrop-filter:blur(4px);       /* оставили лёгкий блёр */
+}
+
+.signup-view .role-select legend{
+  font-weight:600;
+}
+
+.signup-view .btn-main{
+  margin-top:1.2rem;
+}
+
+/* на всякий случай скрываем лишние формы, если они вдруг остались в DOM */
+.signup-view form ~ form{display:none}
+
+/* === style.css → ДОБАВЬ в конец или после переменных === */
+
+/* правим header, чтобы элементы складывались столбиком */
+.sidebar header{
+  display:flex;flex-direction:column;align-items:center;gap:1rem;
+}
+
+/* компактная кнопка-иконка */
+.dash-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:42px;height:42px;
+  border-radius:12px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  color:var(--text);font-size:1rem;
+  transition:background .25s,box-shadow .25s;
+}
+.dash-icon:hover{
+  background:var(--accent);color:#fff;
+  box-shadow:0 4px 14px rgba(0,85,255,.35);
+}
+.dash-icon:active{transform:scale(.96)}
+
+

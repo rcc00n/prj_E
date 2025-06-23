@@ -28,11 +28,12 @@ document.getElementById('loginForm').addEventListener('submit', async e=>{
                body:JSON.stringify(body)});
   if(r.ok){location.reload()} else alert('Wrong credentials');
 });
+// auth.js  → замена только нужной части
 document.getElementById('signupForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const body = Object.fromEntries(new FormData(e.target));
-  const r = await fetch('/api/signup', {method:'POST',credentials:'include',
-               headers:{'Content-Type':'application/json'},
-               body:JSON.stringify(body)});
-  if(r.ok){location.reload()} else alert('User exists');
+  const r = await fetch('/api/signup',{method:'POST',credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)});
+  if(r.ok){location.reload()}else alert('User exists');
 });

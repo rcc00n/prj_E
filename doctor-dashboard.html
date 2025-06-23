@@ -1,0 +1,28 @@
+<!-- doctor-dashboard.html -->
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Doctor dashboard</title>
+<link rel="stylesheet" href="cabstyle.css">
+<script type="module">
+import './theme.js';
+document.addEventListener('DOMContentLoaded',async()=>{
+  const r = await fetch('/api/session',{credentials:'include'});
+  if(!r.ok) location.href = '/';           // если сессия пропала
+  const u = await r.json();
+  document.querySelector('#hello').textContent = `Welcome, Dr. ${u.name}`;
+});
+</script>
+</head>
+<body class="dashboard">
+<h1 id="hello"></h1>
+<section class="dash-section">
+  <h2>Upcoming visits</h2>
+  <p>No bookings yet. Booking system coming soon…</p>
+</section>
+<section class="dash-section">
+  <h2>Profile</h2>
+  <p>Later here you’ll edit speciality, price and schedule.</p>
+</section>
+</body>
+</html>
