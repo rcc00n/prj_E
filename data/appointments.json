@@ -1,0 +1,12 @@
+[
+  {
+    "id": "9f84e6afa5c6f57f",
+    "docId": "emily.carter@medlink.de",
+    "patId": "10@gmail.com",
+    "doctor": "Dr Emily Carter",
+    "patient": "10",
+    "date": "2025-06-24T15:46",
+    "service": "consult",
+    "status": "booked"
+  }
+]

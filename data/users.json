@@ -23,5 +23,19 @@
     "role": "patient",
     "salt": "f4e12170ee8e69682e4b5ff2aef74edd",
     "hash": "a97d7e52eed9799b7d85d685660f18dda3456c478392d236471ffe6eba2ab1e6f31d43f3e1f59a5faa300079ef1eeae4150850b5ad6ddf2d84663b1991c223ef"
+  },
+  {
+    "name": "9",
+    "email": "9@gmail.com",
+    "role": "doctor",
+    "salt": "2a493547797896927a9684cdaac2b304",
+    "hash": "a074d987dc44bb34145dc816d9e98dbe8c1c7c1de11d2333b3a70221c3dcb8776c40a65e44cfe247df65b13b2991eda9da6faa799f3f900454c64ea1f3bcb585"
+  },
+  {
+    "name": "Dr Emily Carter",
+    "email": "emily.carter@medlink.de",
+    "role": "doctor",
+    "salt": "4c1ba49373a832ccac53a49328ea6a97",
+    "hash": "6b17752b1bc4d5801c9b974ba083f4e6a0609af4cc5b79c4cbdf58174cf09d2d200fbe72c6fe08ded40689649e762cbcc969708f2401823fa871f4a9554347fd"
   }
 ]

@@ -36,17 +36,21 @@
 
     <!-- форма записи -->
     <!-- =====  ВМЕСТО старой .form-view  (doctors.html / index.html)  ===== -->
+<!-- ===== запись на приём ===== -->
 <div class="form-view" style="display:none">
-  <h2 data-i18n="form.title"></h2>
+  <h2 id="appointmentTitle">New appointment</h2>
 
   <form id="appointmentForm" class="app-form">
-    <input name="name"   data-i18n-ph="form.name"  required>
-    <input name="email"  type="email" data-i18n-ph="form.email" required>
-    <input name="phone"  type="tel"   data-i18n-ph="form.phone" required>
+    <!-- заполним автоматически, но оставим возможность правки -->
+    <input name="name"   placeholder="Your name"  required>
+    <input name="email"  type="email" placeholder="Email" required>
+    <input name="phone"  type="tel"   placeholder="Phone" required>
+    <input name="when"   type="datetime-local" required>
 
-    <button type="submit" data-i18n="form.send"></button>
+    <button type="submit">Submit</button>
   </form>
 </div>
+
 
   </div>
 </div>

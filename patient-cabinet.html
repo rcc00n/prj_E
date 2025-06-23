@@ -1,0 +1,42 @@
+<!-- patient-cabinet.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patient Dashboard</title>
+
+  <link rel="stylesheet" href="cabstyle.css">
+  <style>
+    body{margin:0;font-family:system-ui;background:#0d1e34;color:#e9efff}
+    .back{position:fixed;top:16px;left:16px;padding:.4rem .9rem;
+          background:#3a73ff;border-radius:12px;color:#fff;text-decoration:none}
+    h1{margin:120px 0 6px;font-size:52px;text-align:center;color:#3a8bff}
+    #patGreet{text-align:center;font-size:20px;margin-bottom:48px}
+
+    .stats{display:flex;gap:24px;justify-content:center;margin-bottom:32px}
+    .stats div{background:#142342;padding:22px 36px;border-radius:14px;text-align:center}
+    .stats h3{margin:0 0 6px;font-size:30px;color:#4ea3ff}
+    .stats span{font-size:14px;color:#b4c6ff}
+
+    .cab-table{width:760px;max-width:90vw;margin:0 auto;border-collapse:collapse}
+    .cab-table thead{background:#1a2d52}
+    .cab-table th,.cab-table td{padding:12px 18px;text-align:left}
+    .cab-table tbody tr:nth-child(odd){background:#10213b}
+    .cab-table tbody tr:nth-child(even){background:#15284a}
+    .cab-table td{color:#e4edff}
+    .cab-table tbody tr:hover{background:#233b63}
+    .empty{text-align:center;color:#9db3ff;font-size:17px}
+  </style>
+
+  <script src="patientCabinet.js" defer></script>
+</head>
+<body>
+  <a class="back" href="index.html">← Home</a>
+
+  <h1>Patient Dashboard</h1>
+  <p id="patGreet"></p>
+
+  <section id="patStats"></section>
+  <div    id="patTable"></div>
+</body>
+</html>

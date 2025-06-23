@@ -1,13 +1,31 @@
 // server.js  (без фреймворков)
 const http   = require('http');
 const fs     = require('fs');
-const path   = require('path');
+const path = require('path');
+
+/* === helpers for doctors === */
+const doctorsDir = path.join(__dirname, 'data');
+
+function readDoctors(lang = 'all') {
+  const merge = (...arrs) => [].concat(...arrs);
+  const file = n => JSON.parse(fs.readFileSync(path.join(doctorsDir, n), 'utf8'));
+
+  if (lang === 'en') return file('doctors-en.json');
+  if (lang === 'ru') return file('doctors-ru.json');
+  /* both */
+  return merge(file('doctors-en.json'), file('doctors-ru.json'));
+}
+
+
 const crypto = require('crypto');
 
 const usersFile = path.join(__dirname,'data','users.json');
 const sessions  = new Map();               // sid → email
 
 /* утилиты */
+const apptFile   = path.join(__dirname,'data','appointments.json');
+const readAppts  = () => { try{return JSON.parse(fs.readFileSync(apptFile,'utf8'))}catch{return[]} };
+const writeAppts = a => fs.writeFileSync(apptFile,JSON.stringify(a,null,2));
 const send = (res,c,o)=>{res.writeHead(c,{'Content-Type':'application/json'});res.end(JSON.stringify(o))};
 const hash = (p,s)=>crypto.pbkdf2Sync(p,s,1e5,64,'sha512').toString('hex');
 const readUsers  = ()=>{try{return JSON.parse(fs.readFileSync(usersFile,'utf8'))}catch{return[]}};
@@ -71,6 +89,27 @@ function handleApi(req,res){
       return newSession(res,u.email);
     }
 
+    /* ---- READ APPOINTMENTS BY ROLE ---------------------------------- */
+if (req.method === 'GET' &&
+    /^\/api\/(patient|doctor)\/[^/]+\/appointments$/.test(req.url)) {
+
+  const [, role, encodedEmail] = req.url.match(/^\/api\/(patient|doctor)\/([^/]+)\/appointments$/);
+  const email = decodeURIComponent(encodedEmail);
+
+  /* читаем файл с бронями */
+  const apptsFile = path.join(__dirname, 'data', 'appointments.json');
+  let list = [];
+  try { list = JSON.parse(fs.readFileSync(apptsFile, 'utf8')); }
+  catch { return send(res, 500, { err: 'appts_read_fail' }); }
+
+  /* фильтруем по роли */
+  const filtered = role === 'patient'
+      ? list.filter(a => a.patId === email)
+      : list.filter(a => a.docId === email);
+
+  return send(res, 200, filtered);
+}
+
     /* --- SESSION --- */
     if(req.url === '/api/session' && req.method === 'GET'){
       const {sid} = parseCookies(req.headers.cookie);
@@ -80,8 +119,45 @@ function handleApi(req,res){
       return send(res,200,{name:u.name,email:u.email,role:u.role});
     }
 
-    /* 404 для остальных */
-    send(res,404,{});
+
+  /* --- API: общий список врачей --- */
+if (req.url.startsWith('/api/doctors') && req.method === 'GET') {
+  const u = new URL(req.url, `http://${req.headers.host}`);
+  const lang = u.searchParams.get('lang') || 'all';          // en | ru | all
+  return send(res, 200, readDoctors(lang));
+}
+
+/* --- API: создать запись на приём --- */
+if (req.url === '/api/appointments' && req.method === 'POST') {
+  const { sid } = parseCookies(req.headers.cookie || '');
+  const patEmail = sessions.get(sid);
+  if (!patEmail) return send(res, 401, { err: 'no_session' });
+
+  const users    = readUsers();
+  const patient  = users.find(u => u.email === patEmail) || {};
+  const doctors  = readDoctors();                                   // ← здесь
+  const doctor   = doctors.find(d => d.email === data.doctorEmail); // ищем во врачах
+
+  /* если врач не найден — отвечаем понятной ошибкой */
+  if (!doctor)
+    return send(res, 400, { err: 'doc_not_found', email: data.doctorEmail });
+
+  const appts = readAppts();
+  appts.push({
+    id:      crypto.randomBytes(8).toString('hex'),
+    docId:   doctor.email,
+    patId:   patEmail,
+    doctor:  doctor.name,
+    patient: patient.name || patEmail,
+    date:    data.when,
+    service: data.service || 'consult',
+    status:  'booked'
+  });
+  writeAppts(appts);
+  return send(res, 201, { ok: true });
+}
+
+   
   });
 }
 
@@ -98,3 +174,4 @@ http.createServer((req,res)=>{
   if(req.url.startsWith('/api/')) return handleApi(req,res);
   serveStatic(req,res);
 }).listen(8080,()=>console.log('⇢ http://localhost:8080'));
+

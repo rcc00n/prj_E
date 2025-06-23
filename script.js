@@ -254,8 +254,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
   const link = document.createElement('a');
   link.className = 'dash-icon';
   link.href      = role === 'doctor'
-                   ? 'doctor-dashboard.html'
-                   : 'patient-dashboard.html';
+                   ? 'doctor-cabinet.html'
+                   : 'patient-cabinet.html';
   link.title     = 'Dashboard';
   link.innerHTML = `
     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"
