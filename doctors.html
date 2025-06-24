@@ -60,6 +60,7 @@
   <span></span><span></span><span></span>
 </button>
 
+<!-- ────────── COMMON SIDEBAR (paste on every page) ────────── -->
 <aside id="sidebar" class="sidebar collapsed">
   <header>
     <span class="logo" data-i18n="brand"></span>
@@ -67,19 +68,30 @@
   </header>
 
   <nav>
-    <a href="index.html"           data-i18n="nav.home"></a>
-    <a href="services.html"        data-i18n="nav.services"></a>
+    <!-- set .active on the current page link -->
+    <a href="index.html"    data-i18n="nav.home"></a>
+    <a href="services.html" data-i18n="nav.services"></a>
     <a href="doctors.html" class="active" data-i18n="nav.doctors"></a>
-    <a href="index.html#how"       data-i18n="nav.how"></a>
-    <a href="index.html#reviews"   data-i18n="nav.reviews"></a>
-    <a href="index.html#contact"   data-i18n="nav.contact"></a>
+    <a href="index.html#how"     data-i18n="nav.how"></a>
+    <a href="index.html#reviews" data-i18n="nav.reviews"></a>
+    <a href="index.html#contact" data-i18n="nav.contact"></a>
   </nav>
 
+  <div class="spacer"></div>
+
+  <!-- auth buttons -->
+  <div class="auth-links">
+    <a class="btn-auth btn-outline" href="#" id="openLogin"  data-i18n="auth.login"></a>
+    <a class="btn-auth"             href="#" id="openSignup" data-i18n="auth.signup"></a>
+  </div>
+
+  <!-- language -->
   <div class="lang-switcher">
-    <button type="button" class="lang-btn" data-lang="en">EN</button>
-    <button type="button" class="lang-btn" data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="ru">RU</button>
   </div>
 </aside>
+
 
 <main class="content">
   <section class="page-hero">
