@@ -737,3 +737,30 @@ html.light{ --hero-overlay:rgba(255,255,255,.55); }   /* осветляем в �
 .dash-icon:active{transform:scale(.96)}
 
 
+/* ===== compact sidebar header ===== */
+.sidebar{               /* higher header → more nav room */
+  padding:4rem 1.5rem 2rem;   /* top ↓ (was 6.5rem) */
+}
+.sidebar header{        /* tighter internal spacing   */
+  padding:.5rem 1.5rem; /* top padding ↓              */
+  margin-bottom:.5rem;  /* gap below logo ↓           */
+  gap:.6rem;            /* logo ↕ theme-icon spacing  */
+}
+
+/* ====  SIDEBAR COMPACT v3  ====  */
+/* чуть плотнее упаковываем колонки */
+.sidebar{
+  /* верхнее «плечо» стало короче: 6.5 rem → 5 rem */
+  padding:5rem 1.5rem 2rem;
+  /* уменьшили межблочный зазор: 2 rem → 1.25 rem */
+  gap:1.25rem;
+}
+
+/* ссылки навигации короче по высоте */
+.sidebar nav a{
+  /* .85 rem → .7 rem – в сумме экономим ~2 px на каждую кнопку */
+  padding:.7rem 1rem;
+}
+
+/* .spacer теперь не нужен — убираем, чтобы не съедал пространство */
+.spacer{display:none!important;}
