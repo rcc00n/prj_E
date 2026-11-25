@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { createServer } = require('../server');
+const { provisionDoctor } = require('../scripts/provision_demo_doctor');
 let directory, server, base;
 beforeEach(async () => {
   directory = fs.mkdtempSync(path.join(os.tmpdir(), 'medlink-test-'));
@@ -33,7 +34,11 @@ test('anonymous and cross-user appointment reads are rejected; owner sees only o
   assert.equal((await fetch(base + '/api/doctor/alice%40example.test/appointments', { headers: { Cookie: alice } })).status, 403);
 });
 test('doctor session can read own assigned records but cannot impersonate a patient', async () => {
-  const alice = await signup('alice@example.test'); const doctor = await signup('doctor@example.test', 'doctor');
+  const alice = await signup('alice@example.test');
+  provisionDoctor({ dataDir: directory, password: 'local-fixture-password' });
+  const login = await post('/api/login', { email: 'doctor@example.test', password: 'local-fixture-password' });
+  assert.equal(login.status, 200);
+  const doctor = login.headers.get('set-cookie').split(';')[0];
   await post('/api/appointments', { doctorEmail: 'doctor@example.test', when: '2030-01-01' }, alice);
   const response = await fetch(base + '/api/doctor/doctor%40example.test/appointments', { headers: { Cookie: doctor } });
   assert.equal(response.status, 200); assert.equal((await response.json()).length, 1);
@@ -53,4 +58,27 @@ test('malformed bodies, cookies and unknown API routes return bounded JSON failu
   assert.equal((await post('/api/signup', { name:'x'.repeat(70000) })).status, 413);
   assert.equal((await fetch(base + '/api/session', {headers:{Cookie:'sid=%ZZ'}})).status, 401);
   assert.equal((await fetch(base + '/api/missing')).status, 404);
+});
+
+test('public signup cannot claim a doctor role or reserved doctor identity', async () => {
+  const patient = await signup('patient@example.test');
+  await post('/api/appointments', { doctorEmail: 'doctor@example.test', when: '2030-01-01' }, patient);
+  for (const role of ['doctor', 'admin']) {
+    const attempt = await post('/api/signup', { name: 'Synthetic attacker', email: 'doctor@example.test', password: 'fixture-only-password', role });
+    assert.equal(attempt.status, 400);
+    assert.equal(attempt.headers.get('set-cookie'), null);
+  }
+  assert.equal((await post('/api/signup', { name: 'Synthetic attacker', email: 'DOCTOR@example.test', password: 'fixture-only-password', role: 'patient' })).status, 409);
+  assert.equal((await fetch(base + '/api/doctor/doctor%40example.test/appointments', { headers: { Cookie: patient } })).status, 403);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(directory, 'users.json'))).length, 1);
+  assert.equal((await fetch(base + '/api/doctors?lang=en')).status, 200);
+  const html = await (await fetch(base + '/')).text();
+  assert.ok(!html.includes('value="doctor"'));
+});
+test('synthetic doctor provisioning never overwrites an existing identity', async () => {
+  provisionDoctor({ dataDir: directory, password: 'local-fixture-password' });
+  const before = fs.readFileSync(path.join(directory, 'users.json'), 'utf8');
+  assert.ok(!before.includes('local-fixture-password'));
+  assert.throws(() => provisionDoctor({ dataDir: directory, password: 'other-fixture-password' }), /exists/);
+  assert.equal(fs.readFileSync(path.join(directory, 'users.json'), 'utf8'), before);
 });

@@ -42,10 +42,10 @@ function createServer({ dataDir = process.env.DEMO_DATA_DIR || path.join(__dirna
       if (!validText(data.email, 3, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) || !validText(data.password, 8, 128)) return send(res, 400, { err: 'invalid_credentials' });
       const users = read(usersFile);
       if (pathname === '/api/signup') {
-        if (!validText(data.name, 1, 100) || !['patient', 'doctor'].includes(data.role || 'patient')) return send(res, 400, { err: 'invalid_profile' });
-        if (users.some(user => user.email === data.email)) return send(res, 409, { err: 'exists' });
+        if (!validText(data.name, 1, 100) || (data.role !== undefined && data.role !== 'patient')) return send(res, 400, { err: 'invalid_profile' });
+        if (users.some(user => user.email.toLowerCase() === data.email.toLowerCase()) || readDoctors().some(doctor => doctor.email.toLowerCase() === data.email.toLowerCase())) return send(res, 409, { err: 'exists' });
         const salt = crypto.randomBytes(16).toString('hex');
-        users.push({ name: data.name, email: data.email, role: data.role || 'patient', salt, hash: hash(data.password, salt) });
+        users.push({ name: data.name, email: data.email, role: 'patient', salt, hash: hash(data.password, salt) });
         write(usersFile, users);
         return newSession(res, data.email);
       }

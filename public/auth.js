@@ -35,5 +35,5 @@ document.getElementById('signupForm').addEventListener('submit', async e=>{
   const r = await fetch('/api/signup',{method:'POST',credentials:'include',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(body)});
-  if(r.ok){location.reload()}else alert('User exists');
+  if(r.ok){location.reload()}else alert('Unable to create a patient account. Check the fields or sign in to an existing account.');
 });
