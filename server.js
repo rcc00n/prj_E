@@ -1,177 +1,128 @@
-// server.js  (без фреймворков)
-const http   = require('http');
-const fs     = require('fs');
-const path = require('path');
+// Educational scheduling demo. Do not use with real patient data.
+const http = require('node:http');
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
 
-/* === helpers for doctors === */
-const doctorsDir = path.join(__dirname, 'data');
+function createServer({ dataDir = process.env.DEMO_DATA_DIR || path.join(__dirname, 'data'), publicDir = path.join(__dirname, 'public') } = {}) {
+  const sessions = new Map();
+  const sessionLifetime = 7 * 24 * 60 * 60 * 1000;
+  const usersFile = path.join(dataDir, 'users.json');
+  const apptFile = path.join(dataDir, 'appointments.json');
+  const read = file => JSON.parse(fs.readFileSync(file, 'utf8'));
+  const write = (file, value) => fs.writeFileSync(file, JSON.stringify(value, null, 2));
+  const send = (res, status, value) => {
+    res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+    res.end(JSON.stringify(value));
+  };
+  const hash = (password, salt) => crypto.pbkdf2Sync(password, salt, 1e5, 64, 'sha512').toString('hex');
+  const userSession = req => {
+    const match = (req.headers.cookie || '').match(/(?:^|;\s*)sid=([a-f0-9]{48})(?:;|$)/);
+    if (!match) return null;
+    const session = sessions.get(match[1]);
+    if (!session) return null;
+    if (session.expires <= Date.now()) { sessions.delete(match[1]); return null; }
+    return read(usersFile).find(user => user.email === session.email) || null;
+  };
+  const newSession = (res, email) => {
+    const sid = crypto.randomBytes(24).toString('hex');
+    sessions.set(sid, { email, expires: Date.now() + sessionLifetime });
+    res.setHeader('Set-Cookie', `sid=${sid}; HttpOnly; SameSite=Strict; Path=/; Max-Age=604800${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`);
+    send(res, 200, {});
+  };
+  const readDoctors = (lang = 'all') => {
+    const languages = lang === 'en' || lang === 'ru' ? [lang] : ['en', 'ru'];
+    return languages.flatMap(language => read(path.join(dataDir, `doctors-${language}.json`)));
+  };
+  const validText = (value, min, max) => typeof value === 'string' && value.trim().length >= min && value.length <= max;
 
-function readDoctors(lang = 'all') {
-  const merge = (...arrs) => [].concat(...arrs);
-  const file = n => JSON.parse(fs.readFileSync(path.join(doctorsDir, n), 'utf8'));
-
-  if (lang === 'en') return file('doctors-en.json');
-  if (lang === 'ru') return file('doctors-ru.json');
-  /* both */
-  return merge(file('doctors-en.json'), file('doctors-ru.json'));
-}
-
-
-const crypto = require('crypto');
-
-const usersFile = path.join(__dirname,'data','users.json');
-const sessions  = new Map();               // sid → email
-
-/* утилиты */
-const apptFile   = path.join(__dirname,'data','appointments.json');
-const readAppts  = () => { try{return JSON.parse(fs.readFileSync(apptFile,'utf8'))}catch{return[]} };
-const writeAppts = a => fs.writeFileSync(apptFile,JSON.stringify(a,null,2));
-const send = (res,c,o)=>{res.writeHead(c,{'Content-Type':'application/json'});res.end(JSON.stringify(o))};
-const hash = (p,s)=>crypto.pbkdf2Sync(p,s,1e5,64,'sha512').toString('hex');
-const readUsers  = ()=>{try{return JSON.parse(fs.readFileSync(usersFile,'utf8'))}catch{return[]}};
-const writeUsers = a => fs.writeFileSync(usersFile,JSON.stringify(a,null,2));
-// разбираем cookie без Object.fromEntries
-const parseCookies = str => {
-  const obj = {};
-  (str || '').split(';').forEach(p => {
-    const [k, v] = p.trim().split('=');
-    if (k) obj[decodeURIComponent(k)] = decodeURIComponent(v || '');
-  });
-  return obj;
-};
-
-/* сессия */
-function newSession(res,email){
-  const sid = crypto.randomBytes(24).toString('hex');
-  sessions.set(sid,email);
-  res.writeHead(200,{
-    'Set-Cookie':`sid=${sid}; HttpOnly; SameSite=Strict; Path=/; Max-Age=604800`,
-    'Content-Type':'application/json'
-  });
-  res.end('{}');
-}
-
-/* API */
-function handleApi(req,res){
-  let body = '';
-  req.on('data', chunk => body += chunk);
-
-  req.on('end', () => {
-    /* разбираем JSON безопасно */
-    let data = {};
-    try{ if(body) data = JSON.parse(body) }catch(e){
-      return send(res,400,{err:'invalid_json'});
+  function handleApi(req, res, url, data) {
+    const pathname = url.pathname;
+    if ((pathname === '/api/signup' || pathname === '/api/login') && req.method === 'POST') {
+      if (!validText(data.email, 3, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email) || !validText(data.password, 8, 128)) return send(res, 400, { err: 'invalid_credentials' });
+      const users = read(usersFile);
+      if (pathname === '/api/signup') {
+        if (!validText(data.name, 1, 100) || !['patient', 'doctor'].includes(data.role || 'patient')) return send(res, 400, { err: 'invalid_profile' });
+        if (users.some(user => user.email === data.email)) return send(res, 409, { err: 'exists' });
+        const salt = crypto.randomBytes(16).toString('hex');
+        users.push({ name: data.name, email: data.email, role: data.role || 'patient', salt, hash: hash(data.password, salt) });
+        write(usersFile, users);
+        return newSession(res, data.email);
+      }
+      const user = users.find(item => item.email === data.email);
+      if (!user || user.hash !== hash(data.password, user.salt)) return send(res, 401, { err: 'bad' });
+      return newSession(res, user.email);
     }
+    const appointments = pathname.match(/^\/api\/(patient|doctor)\/([^/]+)\/appointments$/);
+    if (appointments && req.method === 'GET') {
+      const user = userSession(req);
+      if (!user) return send(res, 401, { err: 'no_session' });
+      let email;
+      try { email = decodeURIComponent(appointments[2]); } catch { return send(res, 400, { err: 'invalid_path' }); }
+      const role = appointments[1];
+      if (user.email !== email || user.role !== role) return send(res, 403, { err: 'forbidden' });
+      const field = role === 'patient' ? 'patId' : 'docId';
+      return send(res, 200, read(apptFile).filter(item => item[field] === user.email));
+    }
+    if (pathname === '/api/session' && req.method === 'GET') {
+      const user = userSession(req);
+      return user ? send(res, 200, { name: user.name, email: user.email, role: user.role }) : send(res, 401, {});
+    }
+    if (pathname === '/api/doctors' && req.method === 'GET') return send(res, 200, readDoctors(url.searchParams.get('lang')));
+    if (pathname === '/api/appointments' && req.method === 'POST') {
+      const patient = userSession(req);
+      if (!patient) return send(res, 401, { err: 'no_session' });
+      if (patient.role !== 'patient') return send(res, 403, { err: 'forbidden' });
+      if (!validText(data.doctorEmail, 3, 254) || !validText(data.when, 1, 100) || (data.service !== undefined && !validText(data.service, 1, 100))) return send(res, 400, { err: 'invalid_appointment' });
+      const doctor = readDoctors().find(item => item.email === data.doctorEmail);
+      if (!doctor) return send(res, 400, { err: 'doc_not_found' });
+      const appts = read(apptFile);
+      appts.push({ id: crypto.randomBytes(8).toString('hex'), docId: doctor.email, patId: patient.email, doctor: doctor.name, patient: patient.name, date: data.when, service: data.service || 'consult', status: 'booked' });
+      write(apptFile, appts);
+      return send(res, 201, { ok: true });
+    }
+    return send(res, 404, { err: 'not_found' });
+  }
 
-    /* --- SIGN-UP --- */
-    if(req.url === '/api/signup' && req.method === 'POST'){
-      const users = readUsers();
-      if(users.some(u => u.email === data.email))
-        return send(res,409,{err:'exists'});
-
-      const salt = crypto.randomBytes(16).toString('hex');
-      users.push({
-        name : data.name,
-        email: data.email,
-        role : data.role || 'patient',
-        salt,
-        hash : hash(data.password,salt)
+  function serveStatic(req, res, url) {
+    if (!['GET', 'HEAD'].includes(req.method)) return send(res, 405, { err: 'method_not_allowed' });
+    let pathname;
+    try { pathname = decodeURIComponent(url.pathname); } catch { return send(res, 400, { err: 'invalid_path' }); }
+    const target = path.resolve(publicDir, '.' + (pathname === '/' ? '/index.html' : pathname));
+    const root = path.resolve(publicDir) + path.sep;
+    if (!target.startsWith(root)) return send(res, 404, { err: 'not_found' });
+    fs.realpath(target, (error, real) => {
+      if (error || !real.startsWith(root)) return send(res, 404, { err: 'not_found' });
+      fs.readFile(real, (error, bytes) => {
+        if (error) return send(res, 404, { err: 'not_found' });
+        const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml' };
+        if (!mime[path.extname(real)]) return send(res, 404, { err: 'not_found' });
+        res.writeHead(200, { 'Content-Type': mime[path.extname(real)], 'X-Content-Type-Options': 'nosniff' });
+        res.end(req.method === 'HEAD' ? undefined : bytes);
       });
-      writeUsers(users);
-      return newSession(res,data.email);
-    }
+    });
+  }
 
-    /* --- LOGIN --- */
-    if(req.url === '/api/login' && req.method === 'POST'){
-      const u = readUsers().find(u => u.email === data.email);
-      if(!u || u.hash !== hash(data.password,u.salt))
-        return send(res,401,{err:'bad'});
-      return newSession(res,u.email);
-    }
-
-    /* ---- READ APPOINTMENTS BY ROLE ---------------------------------- */
-if (req.method === 'GET' &&
-    /^\/api\/(patient|doctor)\/[^/]+\/appointments$/.test(req.url)) {
-
-  const [, role, encodedEmail] = req.url.match(/^\/api\/(patient|doctor)\/([^/]+)\/appointments$/);
-  const email = decodeURIComponent(encodedEmail);
-
-  /* читаем файл с бронями */
-  const apptsFile = path.join(__dirname, 'data', 'appointments.json');
-  let list = [];
-  try { list = JSON.parse(fs.readFileSync(apptsFile, 'utf8')); }
-  catch { return send(res, 500, { err: 'appts_read_fail' }); }
-
-  /* фильтруем по роли */
-  const filtered = role === 'patient'
-      ? list.filter(a => a.patId === email)
-      : list.filter(a => a.docId === email);
-
-  return send(res, 200, filtered);
-}
-
-    /* --- SESSION --- */
-    if(req.url === '/api/session' && req.method === 'GET'){
-      const {sid} = parseCookies(req.headers.cookie);
-      const email  = sessions.get(sid);
-      if(!email) return send(res,401,{});
-      const u = readUsers().find(x => x.email === email) || {};
-      return send(res,200,{name:u.name,email:u.email,role:u.role});
-    }
-
-
-  /* --- API: общий список врачей --- */
-if (req.url.startsWith('/api/doctors') && req.method === 'GET') {
-  const u = new URL(req.url, `http://${req.headers.host}`);
-  const lang = u.searchParams.get('lang') || 'all';          // en | ru | all
-  return send(res, 200, readDoctors(lang));
-}
-
-/* --- API: создать запись на приём --- */
-if (req.url === '/api/appointments' && req.method === 'POST') {
-  const { sid } = parseCookies(req.headers.cookie || '');
-  const patEmail = sessions.get(sid);
-  if (!patEmail) return send(res, 401, { err: 'no_session' });
-
-  const users    = readUsers();
-  const patient  = users.find(u => u.email === patEmail) || {};
-  const doctors  = readDoctors();                                   // ← здесь
-  const doctor   = doctors.find(d => d.email === data.doctorEmail); // ищем во врачах
-
-  /* если врач не найден — отвечаем понятной ошибкой */
-  if (!doctor)
-    return send(res, 400, { err: 'doc_not_found', email: data.doctorEmail });
-
-  const appts = readAppts();
-  appts.push({
-    id:      crypto.randomBytes(8).toString('hex'),
-    docId:   doctor.email,
-    patId:   patEmail,
-    doctor:  doctor.name,
-    patient: patient.name || patEmail,
-    date:    data.when,
-    service: data.service || 'consult',
-    status:  'booked'
-  });
-  writeAppts(appts);
-  return send(res, 201, { ok: true });
-}
-
-   
+  return http.createServer((req, res) => {
+    let url;
+    try { url = new URL(req.url, 'http://localhost'); } catch { return send(res, 400, { err: 'invalid_path' }); }
+    if (!url.pathname.startsWith('/api/')) return serveStatic(req, res, url);
+    if (['POST', 'PUT', 'PATCH'].includes(req.method) && (req.headers['content-type'] || '').split(';')[0].trim().toLowerCase() !== 'application/json') return send(res, 415, { err: 'json_required' });
+    let body = '', size = 0;
+    req.on('data', chunk => {
+      size += chunk.length;
+      if (size > 64 * 1024) { if (!res.writableEnded) send(res, 413, { err: 'body_too_large' }); return; }
+      body += chunk;
+    });
+    req.on('end', () => {
+      if (res.writableEnded) return;
+      let data = {};
+      try { data = body ? JSON.parse(body) : {}; } catch { return send(res, 400, { err: 'invalid_json' }); }
+      if (!data || Array.isArray(data) || typeof data !== 'object') return send(res, 400, { err: 'invalid_json' });
+      try { handleApi(req, res, url, data); } catch { send(res, 500, { err: 'storage_unavailable' }); }
+    });
   });
 }
 
-/* статические файлы */
-function serveStatic(req,res){
-  const file=req.url==='/'?'/index.html':req.url;
-  const ext = path.extname(file)||'.html';
-  const mime={'.html':'text/html','.css':'text/css','.js':'text/javascript','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml'};
-  fs.readFile(path.join(__dirname,file),(e,b)=>{if(e)return send(res,404,{});res.writeHead(200,{'Content-Type':mime[ext]||'application/octet-stream'});res.end(b)});
-}
-
-/* сервер */
-http.createServer((req,res)=>{
-  if(req.url.startsWith('/api/')) return handleApi(req,res);
-  serveStatic(req,res);
-}).listen(8080,()=>console.log('⇢ http://localhost:8080'));
-
+if (require.main === module) createServer().listen(Number(process.env.PORT || 8080), '127.0.0.1', () => console.log('Demo listening on localhost; synthetic data only.'));
+module.exports = { createServer };
