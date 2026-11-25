@@ -1,0 +1,21 @@
+# Retire this historical Netlify site without deleting application source.
+# This does not configure DNS, remove provider deployments, or affect another app.
+[build]
+  base = "."
+  command = "node scripts/check_retirement.mjs"
+  publish = "ops/netlify-retired"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[edge_functions]]
+  function = "retired"
+  path = "/*"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Cache-Control = "no-store"

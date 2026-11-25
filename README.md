@@ -25,3 +25,7 @@ Only `public/` is web-accessible. Source, package files and data JSON are outsid
 ## Known limits
 
 Sessions and JSON persistence are local to one process. Signup does not verify email or clinician identity, there is no production-grade rate limiting and no clinical compliance assessment. Public signup is patient-only. No public route can assign a doctor role. Locally provisioned doctor accounts are synthetic-demo fixtures, not credential verification. Do not put actual patient information in this application. Existing historical datasets are not certified as synthetic; local record files are excluded from the new source checkout and historical copies require separate owner review. Preserve original authorship when reusing this educational work.
+
+## Historical Netlify host
+
+The Netlify publication is configured as a 410/noindex retirement response; application source remains intact. See [retirement scope, verification and rollback](docs/netlify-retirement.md). This is separate from provider-side unpublishing and does not alter another application or its DNS.
