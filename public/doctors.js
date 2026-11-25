@@ -22,7 +22,7 @@ let current  = null;            // выбранный доктор
 /* ── 1. загрузка докторов ── */
 async function loadDoctors(lng='en'){
   try{
-    const resp = await fetch(`./data/doctors-${lng}.json`,{cache:'no-store'});
+    const resp = await fetch(`/api/doctors?lang=${encodeURIComponent(lng)}`,{cache:'no-store'});
     doctors = resp.ok ? await resp.json() : [];
   }catch{ doctors = []; }
   render(doctors);

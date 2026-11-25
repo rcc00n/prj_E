@@ -1,26 +1,5 @@
 /* script.js */
 
-fetch('doctors.json')
-  .then(r => r.json())
-  .then(renderDoctors)
-  .catch(console.error);
-
-function renderDoctors(list){
-  const box = document.getElementById('doctorCards');
-  box.innerHTML = list                       // весь массив
-                   .slice(0, 4)              // ← берём первые 4-е
-                   .map(makeCard).join('');
-}
-
-function makeCard(d){
-  return `
-    <article class="card" id="${d.id}">
-      <img src="${d.photo}" alt="${d.name}">
-      <h3>${d.name}</h3>
-      <span>${d.specialty} · ${d.country}</span>
-    </article>`;
-}
-
 const burger  = document.getElementById('toggleSidebar');
 const sidebar = document.getElementById('sidebar');
 const body    = document.body;
@@ -114,7 +93,7 @@ if (cardsBox){                 // код запускается только н�
 
   async function loadTop(lng){
     try{
-      const res = await fetch(`./data/doctors-${lng}.json`, {cache:'no-store'});
+      const res = await fetch(`/api/doctors?lang=${encodeURIComponent(lng)}`, {cache:'no-store'});
       if(!res.ok) throw new Error(res.status);
       const all = await res.json();
       // возьмём первые 6 (или меньше, если данных меньше)

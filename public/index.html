@@ -27,7 +27,7 @@
 
   <form id="loginForm" class="auth-form">
     <input class="form-control" name="email"    type="email"    placeholder="Email"    required>
-    <input class="form-control" name="password" type="password" placeholder="Password" required>
+    <input class="form-control" name="password" type="password" minlength="8" maxlength="128" placeholder="Password (8+ characters)" required>
     <button class="btn-main" type="submit">Sign In</button>
   </form>
 
@@ -43,14 +43,9 @@
     <!-- три поля -->
     <input class="form-control" name="name"  placeholder="Full name"  required>
     <input class="form-control" name="email" type="email" placeholder="Email" required>
-    <input class="form-control" name="password" type="password" placeholder="Password" required>
+    <input class="form-control" name="password" type="password" minlength="8" maxlength="128" placeholder="Password (8+ characters)" required>
 
-    <!-- выбор роли -->
-    <fieldset class="role-select">
-      <legend>Account type</legend>
-      <label><input type="radio" name="role" value="patient" checked> Patient</label>
-      <label><input type="radio" name="role" value="doctor"> Doctor</label>
-    </fieldset>
+<p>Patient account. Doctor demo access is provisioned locally by the operator.</p>
 
     <button class="btn-main" type="submit">Register</button>
   </form>
